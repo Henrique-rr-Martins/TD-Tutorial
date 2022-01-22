@@ -50,7 +50,7 @@ public class Game extends JFrame implements Runnable{
 
     public static void main(String[] args) {
         Game game = new Game();
-        game.initInputs();
+        game.gameScreen.initInputs();
         game.start();
     }
 
@@ -61,17 +61,6 @@ public class Game extends JFrame implements Runnable{
         this.menu = new Menu(this);
         this.playing = new Playing(this);
         this.settings = new Settings(this);
-    }
-
-    private void initInputs(){
-        myMouseListener = new MyMouseListener();
-        keyboardListener = new KeyboardListener();
-
-        addMouseListener(myMouseListener);
-        addMouseMotionListener(myMouseListener);
-        addKeyListener(keyboardListener);
-
-        super.requestFocus();
     }
 
     private void updateGame(){

@@ -1,84 +1,110 @@
 package scenes;
 
 import main.Game;
+import ui.MyButton;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Random;
+
+import static main.GameStates.*;
 
 public class Menu extends GameScene implements SceneMethods{
-    private final Random random;
 
-    // Image comes from the Game instance
-    private BufferedImage img;
-    // List of sprites
-    public ArrayList<BufferedImage> sprites;
-    private final int WIDTH;
-    private final int HEIGHT;
+    private MyButton bPlaying, bSettings, bQuit;
 
     public Menu(Game game) {
         super(game);
+        // init buttons
+        this.initButtons();
+    }
 
-        this.random = new Random();
+    private void initButtons(){
 
-        // Sprite dimensions
-        this.WIDTH = 32;
-        this.HEIGHT = 32;
+        int w = 150;
+        int h = w / 3;
+        int x = 640 / 2 - w / 2;
+        int y = 150;
+        int yOffset = 100;
 
-        // Import default sprites
-        this.importImg();
-        // Slice the sprite sheet
-        this.loadSprites(img, 10, 10);
+        this.bPlaying = new MyButton("Play", x, y, w, h);
+        this.bSettings = new MyButton("Settings", x, y + yOffset, w, h);
+        this.bQuit = new MyButton("Quit", x, y + yOffset * 2, w, h);
     }
 
     @Override
     public void render(Graphics g) {
-        for(int y = 0; y < 20; y++) {
-            for(int x = 0; x < 20; x++){
-                g.drawImage(sprites.get(getRndInt()), x * 32, y * 32, null);
-            }
+        this.drawButtons(g);
+    }
+
+    private void drawButtons(Graphics g) {
+        this.bPlaying.draw(g);
+        this.bSettings.draw(g);
+        this.bQuit.draw(g);
+    }
+
+    @Override
+    public void mouseClicked(int x, int y) {
+        if(bPlaying.getBounds().contains(x, y)){
+            bPlaying.setMouseOver(false);
+            setGameState(PLAYING);
+        } else if (bSettings.getBounds().contains(x, y)){
+            bSettings.setMouseOver(false);
+            setGameState(SETTINGS);
+        }else if (bQuit.getBounds().contains(x, y)){
+            bQuit.setMouseOver(false);
+            System.exit(0);
         }
     }
 
-    private void importImg(){
-        try(InputStream is = getClass().getResourceAsStream("/spriteatlas.png")){
-            this.img = ImageIO.read(is);
-        }catch (Exception e){
-            e.printStackTrace();
+    @Override
+    public void mouseMoved(int x, int y) {
+        // playing button
+        bPlaying.setMouseOver(false);
+        if(bPlaying.getBounds().contains(x, y)){
+            bPlaying.setMouseOver(true);
+        }
+        // settings button
+        bSettings.setMouseOver(false);
+        if(bSettings.getBounds().contains(x, y)){
+            bSettings.setMouseOver(true);
+        }
+        // quit button
+        bQuit.setMouseOver(false);
+        if(bQuit.getBounds().contains(x, y)){
+            bQuit.setMouseOver(true);
         }
     }
 
-    /**
-     * Cuts the image in many sprites and stores in the sprites array.
-     * Prepares the sprite array to gives the sprites we need based on the main class image
-     *
-     * @param img get a BufferedImage which is the sprite
-     * @param amountY the amount of positions in the HEIGHT
-     * @param amountX the amount of positions in the WIDTH
-     */
-    private void loadSprites(BufferedImage img, int amountY, int amountX) {
-        this.sprites = new ArrayList<>();
-        for (int posY = 0; posY < amountY; posY++) {
-            for (int posX = 0; posX < amountX; posX++) {
-                this.sprites.add(this.getSprite(posX, posY));
-            }
+    @Override
+    public void mousePressed(int x, int y) {
+        // playing button
+        if(bPlaying.getBounds().contains(x, y)){
+            bPlaying.setMousePressed(true);
+        }
+        // setting button
+        if(bSettings.getBounds().contains(x, y)){
+            bSettings.setMousePressed(true);
+        }
+        // quit button
+        if(bQuit.getBounds().contains(x, y)){
+            bQuit.setMousePressed(true);
         }
     }
 
-    /**
-     * @param posX between 0 to 9. Needs to be a position which is equals to amonut of squares -1;
-     * @param posY between 0 to 9 Needs to be a position which is equals to amonut of squares -1;
-     *
-     * @return a subImage from the object BufferedImage using the default WIDTH and HEIGHT
-     */
-    private BufferedImage getSprite(int posX, int posY){
-        return this.img.getSubimage(posX * WIDTH, posY * HEIGHT, WIDTH, HEIGHT);
+    @Override
+    public void mouseReleased(int x, int y) { this.resetButtons(); }
+
+    private void resetButtons() {
+        bPlaying.setMousePressed(false);
+        bSettings.setMousePressed(false);
+        bQuit.setMousePressed(false);
     }
 
-    private int getRndInt(){
-        return random.nextInt(100);
-    }
+    // method to import images
+//    private void importImg(){
+//        try(InputStream is = getClass().getResourceAsStream("/spriteatlas.png")){
+//            this.img = ImageIO.read(is);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
+//    }
 }
