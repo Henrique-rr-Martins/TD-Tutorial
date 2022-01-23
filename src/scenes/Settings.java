@@ -70,4 +70,9 @@ public class Settings extends GameScene implements SceneMethods{
     private void resetButtons(){
         this.bMenu.setMousePressed(false);
     }
+
+    @Override
+    public void mouseDragged(int x, int y) {
+
+    }
 }

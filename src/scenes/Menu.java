@@ -93,6 +93,11 @@ public class Menu extends GameScene implements SceneMethods{
     @Override
     public void mouseReleased(int x, int y) { this.resetButtons(); }
 
+    @Override
+    public void mouseDragged(int x, int y) {
+
+    }
+
     private void resetButtons() {
         bPlaying.setMousePressed(false);
         bSettings.setMousePressed(false);

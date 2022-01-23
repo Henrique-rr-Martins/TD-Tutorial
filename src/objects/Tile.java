@@ -4,12 +4,19 @@ import java.awt.image.BufferedImage;
 
 public class Tile {
     private final BufferedImage sprite;
+    private final int id;
+    private final String name;
 
-    public Tile(BufferedImage sprite){
+    public Tile(BufferedImage sprite, int id, String name){
+
         this.sprite = sprite;
+        this.id = id;
+        this.name = name;
     }
 
     public BufferedImage getSprite(){
         return this.sprite;
     }
+    public int getId() { return this.id; }
+    public String getName() { return this.name; }
 }
