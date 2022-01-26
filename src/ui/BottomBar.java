@@ -14,7 +14,7 @@ public class BottomBar {
 
     private int x, y, width, height;
     private Playing playing;
-    private MyButton bMenu;
+    private MyButton bMenu, bSave;
 
     private Tile selectedTile;
 
@@ -47,22 +47,20 @@ public class BottomBar {
         int xOffset = (int) (squareSide * 1.3f);
 
         this.bMenu = new MyButton("Menu", x, y, squareSide, squareSide);
+        this.bSave = new MyButton("Save", x + xOffset, y, squareSide, squareSide);
 
         for(int i = 0; i < playing.getTileManager().tiles.size(); i++){
             var tile = playing.getTileManager().tiles.get(i);
 
-            tileButtons.add(
-                    new MyButton(
-                            tile.getName(), (x + (squareSide / 2) + xOffset + (xOffset * i)), y,
-                             squareSide, squareSide, i
-                    )
-            );
+            tileButtons.add(new MyButton(tile.getName(), (x * 2 + xOffset * 2 + xOffset * i), y, squareSide, squareSide, i));
         }
     }
 
     private void drawButtons(Graphics g) {
         // menu button
         this.bMenu.draw(g);
+        // save button
+        this.bSave.draw(g);
         // tile buttons
         this.drawTileButtons(g);
         this.drawSelectedTile(g);
@@ -108,6 +106,8 @@ public class BottomBar {
         if(bMenu.getBounds().contains(x, y)){
             bMenu.setMouseOver(false);
             setGameState(MENU);
+        } else if(bSave.getBounds().contains(x, y)){
+            this.saveLevel();
         } else {
             for(MyButton b : tileButtons){
                 if(b.getBounds().contains(x, y)){
@@ -119,14 +119,21 @@ public class BottomBar {
         }
     }
 
+    private void saveLevel() {
+        this.playing.saveLevel();
+    }
+
     public void mouseMoved(int x, int y) {
         bMenu.setMouseOver(false);
+        bSave.setMouseOver(false);
         for(MyButton b : tileButtons)
             b.setMouseOver(false);
 
         if(bMenu.getBounds().contains(x, y)) {
             bMenu.setMouseOver(true);
-        }else {
+        } else if(bSave.getBounds().contains(x, y)){
+            bSave.setMouseOver(true);
+        } else {
             for(MyButton b : tileButtons){
                 if(b.getBounds().contains(x, y)) {
                     b.setMouseOver(true);
@@ -139,7 +146,9 @@ public class BottomBar {
     public void mousePressed(int x, int y) {
         if(bMenu.getBounds().contains(x, y)){
             bMenu.setMousePressed(true);
-        }else {
+        } else if(bSave.getBounds().contains(x, y)){
+            bSave.setMousePressed(true);
+        } else {
             for(MyButton b : tileButtons){
                 if(b.getBounds().contains(x, y)){
                     b.setMousePressed(true);
@@ -150,12 +159,9 @@ public class BottomBar {
     }
 
     public void mouseReleased(int x, int y) {
-        this.resetButtons();
+        bMenu.resetBooleans();
+        bSave.resetBooleans();
         for(MyButton b : tileButtons)
             b.resetBooleans();
-    }
-
-    private void resetButtons(){
-        this.bMenu.setMousePressed(false);
     }
 }

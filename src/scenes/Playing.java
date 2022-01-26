@@ -5,6 +5,7 @@ import managers.TileManager;
 import objects.Tile;
 import ui.BottomBar;
 import util.LevelBuild;
+import util.LoadSave;
 
 import java.awt.*;
 
@@ -22,8 +23,28 @@ public class Playing extends GameScene implements SceneMethods{
         // the level map
         this.lvl = LevelBuild.getLevelData();
         this.tileManager = new TileManager();
-
+        // bottom menu
         this.bottomBar = new BottomBar(0, 640, 640, 100, this);
+
+        this.createDefaultLevel();
+        this.loadDefaultLevel();
+    }
+
+    public void saveLevel() {
+        LoadSave.saveLevel("new_level", lvl);
+    }
+
+    private void loadDefaultLevel() {
+        lvl = LoadSave.getLevelData("new_level");
+    }
+
+    private void createDefaultLevel() {
+        int[] arr = new int[400];
+
+        for(int i = 0; i < arr.length; i++)
+            arr[i] = 0;
+
+        LoadSave.createLevel("new_level",arr);
     }
 
     @Override
@@ -68,7 +89,7 @@ public class Playing extends GameScene implements SceneMethods{
 
             if(this.lvl[tileY][tileX] == this.selectedTile.getId())
                 return;
-            
+
             this.lvl[tileY][tileX] = this.selectedTile.getId();
         }
     }
