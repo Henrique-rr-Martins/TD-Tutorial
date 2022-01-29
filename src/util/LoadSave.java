@@ -62,12 +62,12 @@ public class LoadSave {
         var filePath = String.format(StringUtil.DEFAULT_PATH, name);
         File newLevel = new File(filePath);
 
-        if(newLevel.exists()){
-            writeToFile(newLevel, ArrayUtil.transformFrom2DintTo1DIntArr(idArr));
-        }else{
+        if(!newLevel.exists()){
             System.out.println("File does not exists!");
             return;
         }
+
+        writeToFile(newLevel, ArrayUtil.transformFrom2DintTo1DIntArr(idArr));
     }
 
     public static ArrayList<Integer> readFromFile(File lvlFile){
@@ -88,7 +88,6 @@ public class LoadSave {
         var filePath = String.format(StringUtil.DEFAULT_PATH, name);
         File lvlFile = new File(filePath);
 
-        System.out.println(filePath);
         if(!lvlFile.exists()){
             System.out.println("File does not exists!");
             return null;

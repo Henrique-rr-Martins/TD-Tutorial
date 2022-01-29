@@ -9,7 +9,7 @@ import static main.GameStates.*;
 
 public class Menu extends GameScene implements SceneMethods{
 
-    private MyButton bPlaying, bSettings, bQuit;
+    private MyButton bPlaying, bEdit, bSettings, bQuit;
 
     public Menu(Game game) {
         super(game);
@@ -26,8 +26,9 @@ public class Menu extends GameScene implements SceneMethods{
         int yOffset = 100;
 
         this.bPlaying = new MyButton("Play", x, y, w, h);
-        this.bSettings = new MyButton("Settings", x, y + yOffset, w, h);
-        this.bQuit = new MyButton("Quit", x, y + yOffset * 2, w, h);
+        this.bEdit = new MyButton("Edit", x, y + yOffset, w, h);
+        this.bSettings = new MyButton("Settings", x, y + yOffset * 2, w, h);
+        this.bQuit = new MyButton("Quit", x, y + yOffset * 3, w, h);
     }
 
     @Override
@@ -37,6 +38,7 @@ public class Menu extends GameScene implements SceneMethods{
 
     private void drawButtons(Graphics g) {
         this.bPlaying.draw(g);
+        this.bEdit.draw(g);
         this.bSettings.draw(g);
         this.bQuit.draw(g);
     }
@@ -46,6 +48,9 @@ public class Menu extends GameScene implements SceneMethods{
         if(bPlaying.getBounds().contains(x, y)){
             bPlaying.setMouseOver(false);
             setGameState(PLAYING);
+        } else if(bEdit.getBounds().contains(x, y)){
+            bSettings.setMouseOver(false);
+            setGameState(EDIT);
         } else if (bSettings.getBounds().contains(x, y)){
             bSettings.setMouseOver(false);
             setGameState(SETTINGS);
@@ -61,6 +66,11 @@ public class Menu extends GameScene implements SceneMethods{
         bPlaying.setMouseOver(false);
         if(bPlaying.getBounds().contains(x, y)){
             bPlaying.setMouseOver(true);
+        }
+        // editing button
+        bEdit.setMouseOver(false);
+        if(bEdit.getBounds().contains(x, y)){
+            bEdit.setMouseOver(true);
         }
         // settings button
         bSettings.setMouseOver(false);
@@ -80,6 +90,10 @@ public class Menu extends GameScene implements SceneMethods{
         if(bPlaying.getBounds().contains(x, y)){
             bPlaying.setMousePressed(true);
         }
+        // editing button
+        if(bEdit.getBounds().contains(x, y)){
+            bEdit.setMousePressed(true);
+        }
         // setting button
         if(bSettings.getBounds().contains(x, y)){
             bSettings.setMousePressed(true);
@@ -94,12 +108,11 @@ public class Menu extends GameScene implements SceneMethods{
     public void mouseReleased(int x, int y) { this.resetButtons(); }
 
     @Override
-    public void mouseDragged(int x, int y) {
-
-    }
+    public void mouseDragged(int x, int y) {}
 
     private void resetButtons() {
         bPlaying.setMousePressed(false);
+        bEdit.setMousePressed(false);
         bSettings.setMousePressed(false);
         bQuit.setMousePressed(false);
     }

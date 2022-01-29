@@ -2,9 +2,13 @@ package main;
 
 import inputs.KeyboardListener;
 import inputs.MyMouseListener;
+import managers.TileManager;
+import objects.Tile;
+import scenes.Editing;
 import scenes.Menu;
 import scenes.Playing;
 import scenes.Settings;
+import util.LoadSave;
 
 import javax.swing.*;
 
@@ -20,15 +24,19 @@ public class Game extends JFrame implements Runnable{
     private KeyboardListener keyboardListener;
 
     // BEGIN - Classes to render
+    private TileManager tileManager;
     private Render render;
     private Menu menu;
     private Playing playing;
     private Settings settings;
+    private Editing editing;
     // END - Classes to render
+
 
     public Game(){
 
-        this.initClasses();;
+        this.initClasses();
+//        this.createDefaultLevel();
 
         // Finish the operation
         super.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -43,6 +51,12 @@ public class Game extends JFrame implements Runnable{
         super.setVisible(true);
     }
 
+    private void createDefaultLevel() {
+        int[] arr = new int[400];
+        // Arrays.fill(arr, 0);
+        LoadSave.createLevel("new_level",arr);
+    }
+
     private void start(){
         gameThread = new Thread(this){};
         gameThread.start();
@@ -55,12 +69,14 @@ public class Game extends JFrame implements Runnable{
     }
 
     private void initClasses(){
+        this.tileManager = new TileManager();
         this.render = new Render(this);
         // Create Panel to draw
         this.gameScreen = new GameScreen(this);
         this.menu = new Menu(this);
         this.playing = new Playing(this);
         this.settings = new Settings(this);
+        this.editing = new Editing(this);
     }
 
     private void updateGame(){
@@ -108,8 +124,10 @@ public class Game extends JFrame implements Runnable{
     }
 
     // Getters
-    public Render getRender(){ return this.render; }
+    public Render getRender() { return this.render; }
     public Menu getMenu() { return menu; }
     public Playing getPlaying() { return playing; }
     public Settings getSettings() { return settings; }
+    public Editing getEditor() { return editing; }
+    public TileManager getTileManager(){ return this.tileManager; }
 }
