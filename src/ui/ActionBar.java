@@ -10,9 +10,8 @@ import java.util.ArrayList;
 import static main.GameStates.MENU;
 import static main.GameStates.setGameState;
 
-public class BottomBar {
+public class BottomBar extends Bar {
 
-    private int x, y, width, height;
     private Playing playing;
     private MyButton bMenu, bSave;
 
@@ -21,10 +20,7 @@ public class BottomBar {
     private ArrayList<MyButton> tileButtons = new ArrayList<>();
 
     public BottomBar(int x, int y, int width, int height, Playing playing){
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
+        super(x, y, width, height);
         this.playing = playing;
         // init buttons
         this.initButtons();
@@ -49,8 +45,8 @@ public class BottomBar {
         this.bMenu = new MyButton("Menu", x, y, squareSide, squareSide);
         this.bSave = new MyButton("Save", x + xOffset, y, squareSide, squareSide);
 
-        for(int i = 0; i < playing.getTileManager().tiles.size(); i++){
-            var tile = playing.getTileManager().tiles.get(i);
+        for(int i = 0; i < playing.getGame().getTileManager().tiles.size(); i++){
+            var tile = playing.getGame().getTileManager().tiles.get(i);
 
             tileButtons.add(new MyButton(tile.getName(), (x * 2 + xOffset * 2 + xOffset * i), y, squareSide, squareSide, i));
         }
@@ -99,7 +95,7 @@ public class BottomBar {
     }
 
     public BufferedImage getButtImage(int id){
-        return this.playing.getTileManager().getSprite((id));
+        return playing.getGame().getTileManager().getSprite((id));
     }
 
     public void mouseClicked(int x, int y) {
@@ -111,8 +107,7 @@ public class BottomBar {
         } else {
             for(MyButton b : tileButtons){
                 if(b.getBounds().contains(x, y)){
-                    selectedTile = playing.getTileManager().getTile(b.getId());
-                    playing.setSelectedTile(selectedTile);
+                    selectedTile = playing.getGame().getTileManager().getTile(b.getId());
                     return;
                 }
             }
