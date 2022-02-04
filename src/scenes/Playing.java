@@ -1,23 +1,20 @@
 package scenes;
 
 import main.Game;
+import managers.EnemyManager;
 import ui.ActionBar;
 import util.GlobalValuesUtil;
-import util.LoadSave;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
 public class Playing extends GameScene implements SceneMethods{
-
-    private int[][] lvl;
     private ActionBar bottomBar;
     private int mouseX, mouseY;
 
+    private EnemyManager enemyManager;
+
     public Playing(Game game) {
         super(game);
-
-        this.loadDefaultLevel();
         // bottom menu
         this.bottomBar = new ActionBar(GlobalValuesUtil.X_BAR_POSITION,
                 GlobalValuesUtil.Y_BAR_POSITION,
@@ -25,34 +22,48 @@ public class Playing extends GameScene implements SceneMethods{
                 GlobalValuesUtil.BAR_HEIGHT,
                 this);
 
-    }
-
-    private void loadDefaultLevel() {
-        lvl = LoadSave.getLevelData("new_level");
+        this.enemyManager = new EnemyManager(this);
     }
 
     public void setLevel(int[][] lvl) {
         this.lvl = lvl;
     }
 
-    @Override
-    public void render(Graphics g) {
-
-        for (int y = 0; y < lvl.length; y++) {
-            for (int x = 0; x < lvl[y].length; x++) {
-                int id = lvl[y][x];
-                g.drawImage(this.getSprite(id), x * 32, y * 32, null);
-            }
-        }
-        this.bottomBar.draw(g);
+    public void update(){
+        this.updateTick();
+        this.enemyManager.update();
     }
 
-    private BufferedImage getSprite(int spriteId){ return this.getGame().getTileManager().getSprite(spriteId); }
+    @Override
+    public void render(Graphics g) {
+        this.drawLevel(g);
+        this.bottomBar.draw(g);
+        this.enemyManager.draw(g);
+    }
+
+    public int getTileType(int x, int y) {
+        int xCord = x / 32;
+        int yCord = x / 32;
+
+        try{
+            if(xCord < 0 || xCord > (GlobalValuesUtil.SCREEN_WIDTH / 32 - 1))
+                return 0;
+            else if(yCord < 0 || yCord > (GlobalValuesUtil.SCREEN_HEIGHT / 32 - 1))
+                return 0;
+
+            int id = lvl[y / 32][x / 32];
+            return getGame().getTileManager().getTile(id).getTileType();
+        } catch(ArrayIndexOutOfBoundsException e){
+            return 0;
+        }
+    }
 
     @Override
     public void mouseClicked(int x, int y) {
         if(y >= 640)
             this.bottomBar.mouseClicked(x, y);
+        else
+            this.enemyManager.addEnemy(x, y);
     }
 
     @Override

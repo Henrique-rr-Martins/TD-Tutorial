@@ -7,11 +7,10 @@ import util.GlobalValuesUtil;
 import util.LoadSave;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
+import java.awt.event.KeyEvent;
 
 public class Editing extends GameScene implements SceneMethods {
 
-    private int[][] lvl;
     private Tile selectedTile;
     private int mouseX, mouseY;
     private boolean drawSelect = false;
@@ -20,7 +19,6 @@ public class Editing extends GameScene implements SceneMethods {
     public Editing(Game game) {
 
         super(game);
-        this.loadDefaultLevel();
         this.toolBar = new ToolBar(GlobalValuesUtil.X_BAR_POSITION,
                 GlobalValuesUtil.Y_BAR_POSITION,
                 GlobalValuesUtil.BAR_WIDTH,
@@ -28,8 +26,8 @@ public class Editing extends GameScene implements SceneMethods {
                 this);
     }
 
-    private void loadDefaultLevel() {
-        lvl = LoadSave.getLevelData("new_level");
+    public void update(){
+        this.updateTick();
     }
 
     @Override
@@ -38,17 +36,6 @@ public class Editing extends GameScene implements SceneMethods {
         this.toolBar.draw(g);
         this.drawSelectedTile(g);
     }
-
-    private void drawLevel(Graphics g){
-        for (int y = 0; y < lvl.length; y++) {
-            for (int x = 0; x < lvl[y].length; x++) {
-                int id = lvl[y][x];
-                g.drawImage(this.getSprite(id), x * 32, y * 32, null);
-            }
-        }
-    }
-
-    private BufferedImage getSprite(int spriteId){ return this.getGame().getTileManager().getSprite(spriteId); }
 
     private void drawSelectedTile(Graphics g) {
         if(this.selectedTile != null && this.drawSelect){
@@ -99,19 +86,24 @@ public class Editing extends GameScene implements SceneMethods {
 
     @Override
     public void mousePressed(int x, int y) {
-        if(y >= 640){
+        if(y >= 640)
             this.toolBar.mousePressed(x, y);
-        }
     }
 
     @Override
     public void mouseReleased(int x, int y) {
-
+        this.toolBar.mouseReleased(x, y);
     }
 
     @Override
     public void mouseDragged(int x, int y) {
         if(y < 640)
             this.changeTile(x, y);
+    }
+
+    public void keyPressed(KeyEvent e){
+
+        if(e.getKeyCode() == KeyEvent.VK_R)
+            this.toolBar.rotateSprite();
     }
 }
