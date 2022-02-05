@@ -1,6 +1,6 @@
 package managers;
 
-import enemies.Enemy;
+import enemies.*;
 import scenes.Playing;
 import util.GlobalValuesUtil;
 import util.LoadSave;
@@ -10,7 +10,8 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import static util.ConstantsUtil.Direction.*;
-import static util.ConstantsUtil.Tiles.*;
+import static util.ConstantsUtil.Tiles.ROAD_TILE;
+import static util.ConstantsUtil.Enemies.*;
 
 public class EnemyManager {
     private Playing playing;
@@ -22,27 +23,26 @@ public class EnemyManager {
         this.enemyImgs = new BufferedImage[GlobalValuesUtil.ENEMY_IMAGES_AMOUNT];
         this.loadEnemyImgs();
 
-        this.addEnemy(96, 288);
+        this.addEnemy(96, 288 + GlobalValuesUtil.SPRITE_SIZE, ORC);
+        this.addEnemy(96 + GlobalValuesUtil.SPRITE_SIZE, 288, BAT);
+        this.addEnemy(96 + 64, 288, KNIGHT);
+        this.addEnemy(96 * 2, 288, WOLF);
     }
 
     private void loadEnemyImgs() {
         BufferedImage atlas = LoadSave.getSpriteAtlas();
-        enemyImgs[0] = atlas.getSubimage(0, 32, 32, 32);
-        enemyImgs[1] = atlas.getSubimage(32, 32, 32, 32);
-        enemyImgs[2] = atlas.getSubimage(32 * 2, 32, 32, 32);
-        enemyImgs[3] = atlas.getSubimage(32 * 3, 32, 32, 32);
+
+        for(int i = 0; i < GlobalValuesUtil.ENEMY_IMAGES_AMOUNT; i++)
+            enemyImgs[i] = atlas.getSubimage(i * GlobalValuesUtil.SPRITE_SIZE,
+                    GlobalValuesUtil.SPRITE_SIZE,
+                    GlobalValuesUtil.SPRITE_SIZE,
+                    GlobalValuesUtil.SPRITE_SIZE);
     }
 
     public void update(){
 
-        for(Enemy e : enemies){
-            // is next tile road(pos, dir)
-            if(this.isNextTileRoad(e)){
-//               e.move(e.getLastDir());
-            }else {
-
-            }
-        }
+        for(Enemy e : enemies)
+            this.updateEnemyMove(e);
     }
 
     private boolean isAtEnd(Enemy e) {
@@ -50,12 +50,13 @@ public class EnemyManager {
         return false;
     }
 
-    private boolean isNextTileRoad(Enemy e) {
-        // e pos
-        // e dir
-        // tile at new possible pos
+    private void updateEnemyMove(Enemy e) {
+        if(e.getLastDir() == -1)
+            this.setNewDirectionAndMove(e);
+
+
         int newX = (int) (e.getX() + this.getSpeedAndWidth(e.getLastDir()));
-        int newY = (int) (e.getY() + this.getSpeedAndHight(e.getLastDir()));
+        int newY = (int) (e.getY() + this.getSpeedAndHeight(e.getLastDir()));
 
         if(this.getTileType(newX, newY) == ROAD_TILE){
             // keep moving in same direction
@@ -66,21 +67,19 @@ public class EnemyManager {
             // find new direction
             this.setNewDirectionAndMove(e);
         }
-
-        return false;
     }
 
     private void setNewDirectionAndMove(Enemy e) {
         int dir = e.getLastDir();
 
         // move into the current until 100%;
-        int xCord = (int) (e.getX() / 32);
-        int yCord = (int) (e.getY() / 32);
+        int xCord = (int) (e.getX() / GlobalValuesUtil.SPRITE_SIZE);
+        int yCord = (int) (e.getY() / GlobalValuesUtil.SPRITE_SIZE);
 
         this.fixEnemyOffSetTile(e, dir, xCord, yCord);
 
         if(dir == LEFT || dir == RIGHT){
-            int newY = (int) (e.getY() + this.getSpeedAndHight(UP));
+            int newY = (int) (e.getY() + this.getSpeedAndHeight(UP));
             if(this.getTileType((int) e.getX(), newY) == ROAD_TILE)
                 e.move(UP);
             else
@@ -96,38 +95,30 @@ public class EnemyManager {
 
     private void fixEnemyOffSetTile(Enemy e, int dir, int xCord, int yCord) {
         switch(dir){
-//            case LEFT:
-//                if(xCord > 0)
-//                    xCord--;
-//                break;
-//            case UP:
-//                if(yCord > 0)
-//                    yCord--;
-//                break;
             case RIGHT:
                 // there are 20 tiles, but as array we need to subtract 1 to work with max_tile = 19
-                if(xCord < 19)
+                if(xCord < GlobalValuesUtil.SCREEN_WIDTH / GlobalValuesUtil.SPRITE_SIZE - 1)
                     xCord++;
                 break;
             case DOWN:
                 // there are 20 tiles, but as array we need to subtract 1 to work with max_tile = 19
-                if(yCord < 19)
+                if(yCord < GlobalValuesUtil.SCREEN_HEIGHT / GlobalValuesUtil.SPRITE_SIZE - 1)
                     yCord++;
                 break;
         }
 
-        e.setPos(xCord * 32, yCord * 32);
+        e.setPos(xCord * GlobalValuesUtil.SPRITE_SIZE, yCord * GlobalValuesUtil.SPRITE_SIZE);
     }
 
     private int getTileType(int x, int y) {
         return playing.getTileType(x, y);
     }
 
-    private float getSpeedAndHight(int dir) {
+    private float getSpeedAndHeight(int dir) {
         if(dir == UP)
             return -GlobalValuesUtil.ENEMY_SPEED;
         else if(dir == DOWN)
-            return GlobalValuesUtil.ENEMY_SPEED + 32;
+            return GlobalValuesUtil.ENEMY_SPEED + GlobalValuesUtil.SPRITE_SIZE;
 
         return 0;
     }
@@ -136,13 +127,18 @@ public class EnemyManager {
         if(dir == LEFT)
             return -GlobalValuesUtil.ENEMY_SPEED;
         else if(dir == RIGHT)
-            return GlobalValuesUtil.ENEMY_SPEED + 32;
+            return GlobalValuesUtil.ENEMY_SPEED + GlobalValuesUtil.SPRITE_SIZE;
 
         return 0;
     }
 
-    public void addEnemy(int x, int y){
-        enemies.add(new Enemy(x, y, 0, 0));
+    public void addEnemy(int x, int y, int enemyType){
+        switch (enemyType) {
+            case ORC -> enemies.add(new Orc(x, y, ORC));
+            case BAT -> enemies.add(new Bat(x, y, BAT));
+            case KNIGHT -> enemies.add(new Knight(x, y, KNIGHT));
+            case WOLF -> enemies.add(new Wolf(x, y, WOLF));
+        }
     }
 
     public void draw(Graphics g){

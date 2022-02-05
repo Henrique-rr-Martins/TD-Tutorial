@@ -39,7 +39,7 @@ public class Editing extends GameScene implements SceneMethods {
 
     private void drawSelectedTile(Graphics g) {
         if(this.selectedTile != null && this.drawSelect){
-            g.drawImage(this.selectedTile.getSprite(), mouseX, mouseY, 32, 32, null);
+            g.drawImage(this.selectedTile.getSprite(), mouseX, mouseY, GlobalValuesUtil.SPRITE_SIZE, GlobalValuesUtil.SPRITE_SIZE, null);
         }
     }
 
@@ -54,8 +54,8 @@ public class Editing extends GameScene implements SceneMethods {
 
     private void changeTile(int x, int y) {
         if(this.drawSelect && this.selectedTile != null) {
-            int tileX = x / 32;
-            int tileY = y / 32;
+            int tileX = x / GlobalValuesUtil.SPRITE_SIZE;
+            int tileY = y / GlobalValuesUtil.SPRITE_SIZE;
 
             if(this.lvl[tileY][tileX] != this.selectedTile.getId())
                 this.lvl[tileY][tileX] = this.selectedTile.getId();
@@ -64,7 +64,7 @@ public class Editing extends GameScene implements SceneMethods {
 
     @Override
     public void mouseClicked(int x, int y) {
-        if(y >= 640){
+        if(y >= GlobalValuesUtil.SCREEN_HEIGHT){
             this.toolBar.mouseClicked(x, y);
         }else{
             this.changeTile(x, y);
@@ -73,12 +73,12 @@ public class Editing extends GameScene implements SceneMethods {
 
     @Override
     public void mouseMoved(int x, int y) {
-        if(y >= 640){
+        if(y >= GlobalValuesUtil.SCREEN_HEIGHT){
             this.toolBar.mouseMoved(x, y);
             this.drawSelect = false;
         } else{
-            this.mouseX = (x / 32) * 32;
-            this.mouseY = (y / 32) * 32;
+            this.mouseX = (x / GlobalValuesUtil.SPRITE_SIZE) * GlobalValuesUtil.SPRITE_SIZE;
+            this.mouseY = (y / GlobalValuesUtil.SPRITE_SIZE) * GlobalValuesUtil.SPRITE_SIZE;
 
             this.drawSelect = true;
         }
@@ -86,7 +86,7 @@ public class Editing extends GameScene implements SceneMethods {
 
     @Override
     public void mousePressed(int x, int y) {
-        if(y >= 640)
+        if(y >= GlobalValuesUtil.SCREEN_HEIGHT)
             this.toolBar.mousePressed(x, y);
     }
 
@@ -97,7 +97,7 @@ public class Editing extends GameScene implements SceneMethods {
 
     @Override
     public void mouseDragged(int x, int y) {
-        if(y < 640)
+        if(y < GlobalValuesUtil.SCREEN_HEIGHT)
             this.changeTile(x, y);
     }
 

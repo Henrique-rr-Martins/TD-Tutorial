@@ -5,7 +5,7 @@ import util.GlobalValuesUtil;
 import java.awt.*;
 import static util.ConstantsUtil.Direction.*;
 
-public class Enemy {
+public abstract class Enemy {
     private float x, y;
     private Rectangle bounds;
     private int health;
@@ -18,8 +18,8 @@ public class Enemy {
         this.y = y;
         this.id = id;
         this.enemyType = enemyType;
-        this.bounds = new Rectangle((int)x, (int)y, 32, 32);
-        this.lastDir = RIGHT;
+        this.bounds = new Rectangle((int)x, (int)y, GlobalValuesUtil.SPRITE_SIZE, GlobalValuesUtil.SPRITE_SIZE);
+        this.lastDir = -1;
     }
 
     public void move(int dir){

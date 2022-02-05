@@ -2,6 +2,7 @@ package main;
 
 import inputs.KeyboardListener;
 import inputs.MyMouseListener;
+import util.GlobalValuesUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,7 +32,7 @@ public class GameScreen extends JPanel{
     }
 
     private void setPanelSize(){
-        this.size = new Dimension(640, 740);
+        this.size = new Dimension(GlobalValuesUtil.PANEL_WIDTH, GlobalValuesUtil.PANEL_HEIGHT);
         setMinimumSize(size);
         setPreferredSize(size);
         setMaximumSize(size);

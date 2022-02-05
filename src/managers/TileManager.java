@@ -1,6 +1,7 @@
 package managers;
 
 import objects.Tile;
+import util.GlobalValuesUtil;
 import util.ImgFix;
 import util.LoadSave;
 
@@ -13,7 +14,7 @@ import static util.ConstantsUtil.Tiles.WATER_TILE;
 public class TileManager {
     public Tile GRASS, WATER, ROAD_LR, ROAD_TB, ROAD_B_TO_R, ROAD_L_TO_B, ROAD_L_TO_T, ROAD_T_TO_R, BL_WATER_CORNER,
             TL_WATER_CORNER, TR_WATER_CORNER, BR_WATER_CORNER, T_WATER, R_WATER, B_WATER, L_WATER, TL_ISLE, TR_ISLE,
-            BR_ISLE, BL_ISLE;
+            BR_ISLE, BL_ISLE, PATH_START, PATH_END;
     public BufferedImage atlas;
     public ArrayList<Tile> tiles = new ArrayList<>();
 
@@ -88,7 +89,8 @@ public class TileManager {
     }
 
     private BufferedImage getSprite(int xCord, int yCord){
-        return atlas.getSubimage(xCord * 32, yCord * 32, 32, 32);
+        int size = GlobalValuesUtil.SPRITE_SIZE;
+        return atlas.getSubimage(xCord * size, yCord * size, size, size);
     }
     public boolean isSpriteAnimation(int spriteId){
         return tiles.get(spriteId).isSpriteAnimation();
