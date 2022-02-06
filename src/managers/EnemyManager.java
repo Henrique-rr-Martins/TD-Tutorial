@@ -23,10 +23,10 @@ public class EnemyManager {
         this.enemyImgs = new BufferedImage[GlobalValuesUtil.ENEMY_IMAGES_AMOUNT];
         this.loadEnemyImgs();
 
-        this.addEnemy(96, 288 + GlobalValuesUtil.SPRITE_SIZE, ORC);
-        this.addEnemy(96 + GlobalValuesUtil.SPRITE_SIZE, 288, BAT);
-        this.addEnemy(96 + 64, 288, KNIGHT);
-        this.addEnemy(96 * 2, 288, WOLF);
+        this.addEnemy(ORC);
+        this.addEnemy(BAT);
+        this.addEnemy(KNIGHT);
+        this.addEnemy(WOLF);
     }
 
     private void loadEnemyImgs() {
@@ -46,6 +46,9 @@ public class EnemyManager {
     }
 
     private boolean isAtEnd(Enemy e) {
+        if(e.getX() == this.playing.getEndPathPoint().getXCord() * GlobalValuesUtil.DEFAULT_MAP_TILE_SIZE &&
+        e.getY() == this.playing.getEndPathPoint().getYCord() * GlobalValuesUtil.DEFAULT_MAP_TILE_SIZE)
+            return true;
 
         return false;
     }
@@ -53,7 +56,6 @@ public class EnemyManager {
     private void updateEnemyMove(Enemy e) {
         if(e.getLastDir() == -1)
             this.setNewDirectionAndMove(e);
-
 
         int newX = (int) (e.getX() + this.getSpeedAndWidth(e.getLastDir()));
         int newY = (int) (e.getY() + this.getSpeedAndHeight(e.getLastDir()));
@@ -63,6 +65,7 @@ public class EnemyManager {
             e.move(e.getLastDir());
         } else if(this.isAtEnd(e)){
             // reached the end
+            System.out.println("Lives lost!");
         } else {
             // find new direction
             this.setNewDirectionAndMove(e);
@@ -77,6 +80,9 @@ public class EnemyManager {
         int yCord = (int) (e.getY() / GlobalValuesUtil.SPRITE_SIZE);
 
         this.fixEnemyOffSetTile(e, dir, xCord, yCord);
+
+        if(isAtEnd(e))
+            return;
 
         if(dir == LEFT || dir == RIGHT){
             int newY = (int) (e.getY() + this.getSpeedAndHeight(UP));
@@ -132,12 +138,14 @@ public class EnemyManager {
         return 0;
     }
 
-    public void addEnemy(int x, int y, int enemyType){
+    public void addEnemy(int enemyType){
+        int x = this.playing.getStartPathPoint().getXCord();
+        int y = this.playing.getStartPathPoint().getYCord();
         switch (enemyType) {
-            case ORC -> enemies.add(new Orc(x, y, ORC));
-            case BAT -> enemies.add(new Bat(x, y, BAT));
-            case KNIGHT -> enemies.add(new Knight(x, y, KNIGHT));
-            case WOLF -> enemies.add(new Wolf(x, y, WOLF));
+            case ORC -> enemies.add(new Orc(x * GlobalValuesUtil.DEFAULT_MAP_TILE_SIZE, y * GlobalValuesUtil.DEFAULT_MAP_TILE_SIZE, ORC));
+            case BAT -> enemies.add(new Bat(x * GlobalValuesUtil.DEFAULT_MAP_TILE_SIZE, y * GlobalValuesUtil.DEFAULT_MAP_TILE_SIZE, BAT));
+            case KNIGHT -> enemies.add(new Knight(x * GlobalValuesUtil.DEFAULT_MAP_TILE_SIZE, y * GlobalValuesUtil.DEFAULT_MAP_TILE_SIZE, KNIGHT));
+            case WOLF -> enemies.add(new Wolf(x * GlobalValuesUtil.DEFAULT_MAP_TILE_SIZE, y * GlobalValuesUtil.DEFAULT_MAP_TILE_SIZE, WOLF));
         }
     }
 

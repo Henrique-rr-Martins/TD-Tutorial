@@ -65,7 +65,7 @@ public class Playing extends GameScene implements SceneMethods{
         if(y >= 640)
             this.bottomBar.mouseClicked(x, y);
         else
-            this.enemyManager.addEnemy(x, y, ORC);
+            this.enemyManager.addEnemy(ORC);
     }
 
     @Override

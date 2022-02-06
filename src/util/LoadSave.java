@@ -1,5 +1,7 @@
 package util;
 
+import objects.PathPoint;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -42,23 +44,28 @@ public class LoadSave {
 
         try {
             newLevel.createNewFile();
-            writeToFile(newLevel, idArr);
+            writeToFile(newLevel, idArr, new PathPoint(0, 0), new PathPoint(0, 0));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private static void writeToFile(File file, int[] idArr) {
+    private static void writeToFile(File file, int[] idArr, PathPoint start, PathPoint end) {
         File txtFile = new File("resource/testTextFile.txt");
         try(PrintWriter pw = new PrintWriter(file)){
             for(Integer i : idArr)
                 pw.println(i);
+
+            pw.println(start.getXCord());
+            pw.println(start.getYCord());
+            pw.println(end.getXCord());
+            pw.println(end.getYCord());
         } catch (IOException e){
             e.printStackTrace();
         }
     }
 
-    public static void saveLevel(String name, int[][] idArr){
+    public static void saveLevel(String name, int[][] idArr, PathPoint start, PathPoint end){
         var filePath = String.format(StringUtil.DEFAULT_PATH, name);
         File newLevel = new File(filePath);
 
@@ -67,7 +74,7 @@ public class LoadSave {
             return;
         }
 
-        writeToFile(newLevel, ArrayUtil.transformFrom2DintTo1DIntArr(idArr));
+        writeToFile(newLevel, ArrayUtil.transformFrom2DintTo1DIntArr(idArr), start, end);
     }
 
     public static ArrayList<Integer> readFromFile(File lvlFile){
@@ -82,6 +89,25 @@ public class LoadSave {
         }
 
         return list;
+    }
+
+    public static ArrayList<PathPoint> getLevelPathPoints(String name){
+        var filePath = String.format(StringUtil.DEFAULT_PATH, name);
+        File lvlFile = new File(filePath);
+
+        if(!lvlFile.exists()){
+            System.out.println("File does not exists!");
+            return null;
+        }
+
+        ArrayList<Integer> list = readFromFile(lvlFile);
+
+        ArrayList<PathPoint> points = new ArrayList<>();
+
+        points.add(new PathPoint(list.get(400), list.get(401)));
+        points.add(new PathPoint(list.get(402), list.get(403)));
+
+        return points;
     }
 
     public static int[][] getLevelData(String name){

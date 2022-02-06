@@ -1,16 +1,19 @@
 package scenes;
 
 import main.Game;
+import objects.PathPoint;
 import util.GlobalValuesUtil;
 import util.LoadSave;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 public class GameScene {
 
     protected int[][] lvl;
     private Game game;
+    protected PathPoint start, end;
 
     // index of sprite in animation
     protected int animationIndex;
@@ -25,6 +28,9 @@ public class GameScene {
 
     private void loadDefaultLevel() {
         lvl = LoadSave.getLevelData("new_level");
+        ArrayList<PathPoint> points = LoadSave.getLevelPathPoints("new_level");
+        start = points.get(0);
+        end = points.get(1);
     }
 
     public Game getGame(){ return this.game; }
@@ -59,4 +65,7 @@ public class GameScene {
     protected BufferedImage getSprite(int spriteId, int animationIndex){
         return this.getGame().getTileManager().getAnimatedSprite(spriteId, animationIndex);
     }
+
+    public PathPoint getStartPathPoint(){ return this.start; }
+    public PathPoint getEndPathPoint(){ return this.end; }
 }

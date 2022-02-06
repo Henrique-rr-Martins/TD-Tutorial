@@ -330,4 +330,7 @@ public class ToolBar extends Bar {
         for(MyButton b : map.keySet())
             b.resetBooleans();
     }
+
+    public BufferedImage getPathStart(){ return this.pathStart; }
+    public BufferedImage getPathEnd(){ return this.pathEnd; }
 }

@@ -1,6 +1,10 @@
 package util;
 
 public class GlobalValuesUtil {
+
+    // map size
+    public static final int DEFAULT_MAP_TILE_SIZE = 32;
+
     // play screen
     public static final int SCREEN_WIDTH = 640;
     public static final int SCREEN_HEIGHT = 640;
