@@ -37,5 +37,7 @@ public class GlobalValuesUtil {
 
     // enemies
     public static final int ENEMY_IMAGES_AMOUNT = 4;
-    public static final float ENEMY_SPEED = 2f;
+
+    // towers
+    public static final int TOWER_IMAGES_AMOUNT = 3;
 }

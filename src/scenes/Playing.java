@@ -2,6 +2,7 @@ package scenes;
 
 import main.Game;
 import managers.EnemyManager;
+import managers.TowerManager;
 import ui.ActionBar;
 import util.GlobalValuesUtil;
 
@@ -14,6 +15,7 @@ public class Playing extends GameScene implements SceneMethods{
     private int mouseX, mouseY;
 
     private EnemyManager enemyManager;
+    private TowerManager towerManager;
 
     public Playing(Game game) {
         super(game);
@@ -25,6 +27,7 @@ public class Playing extends GameScene implements SceneMethods{
                 this);
 
         this.enemyManager = new EnemyManager(this);
+        this.towerManager = new TowerManager(this);
     }
 
     public void setLevel(int[][] lvl) {
@@ -34,6 +37,7 @@ public class Playing extends GameScene implements SceneMethods{
     public void update(){
         this.updateTick();
         this.enemyManager.update();
+        this.towerManager.update();
     }
 
     @Override
@@ -41,6 +45,7 @@ public class Playing extends GameScene implements SceneMethods{
         this.drawLevel(g);
         this.bottomBar.draw(g);
         this.enemyManager.draw(g);
+        this.towerManager.draw(g);
     }
 
     public int getTileType(int x, int y) {

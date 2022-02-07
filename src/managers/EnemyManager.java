@@ -2,6 +2,7 @@ package managers;
 
 import enemies.*;
 import scenes.Playing;
+import util.ConstantsUtil;
 import util.GlobalValuesUtil;
 import util.LoadSave;
 
@@ -14,9 +15,12 @@ import static util.ConstantsUtil.Tiles.ROAD_TILE;
 import static util.ConstantsUtil.Enemies.*;
 
 public class EnemyManager {
-    private Playing playing;
-    private BufferedImage[] enemyImgs;
-    private ArrayList<Enemy> enemies = new ArrayList<>();
+    private final Playing playing;
+    private final BufferedImage[] enemyImgs;
+    private final ArrayList<Enemy> enemies = new ArrayList<>();
+
+    private final int tileSize = GlobalValuesUtil.DEFAULT_MAP_TILE_SIZE;
+    private final int spriteSize = GlobalValuesUtil.SPRITE_SIZE;
 
     public EnemyManager(Playing playing){
         this.playing = playing;
@@ -33,51 +37,47 @@ public class EnemyManager {
         BufferedImage atlas = LoadSave.getSpriteAtlas();
 
         for(int i = 0; i < GlobalValuesUtil.ENEMY_IMAGES_AMOUNT; i++)
-            enemyImgs[i] = atlas.getSubimage(i * GlobalValuesUtil.SPRITE_SIZE,
-                    GlobalValuesUtil.SPRITE_SIZE,
-                    GlobalValuesUtil.SPRITE_SIZE,
-                    GlobalValuesUtil.SPRITE_SIZE);
+            enemyImgs[i] = atlas.getSubimage(i * spriteSize, spriteSize, spriteSize, spriteSize);
     }
 
     public void update(){
 
         for(Enemy e : enemies)
-            this.updateEnemyMove(e);
+            this.updateEnemyMove(e, getSpeed(e.getEnemyType()));
     }
 
     private boolean isAtEnd(Enemy e) {
-        if(e.getX() == this.playing.getEndPathPoint().getXCord() * GlobalValuesUtil.DEFAULT_MAP_TILE_SIZE &&
-        e.getY() == this.playing.getEndPathPoint().getYCord() * GlobalValuesUtil.DEFAULT_MAP_TILE_SIZE)
-            return true;
-
-        return false;
+        return e.getX() == this.playing.getEndPathPoint().getXCord() * tileSize &&
+                e.getY() == this.playing.getEndPathPoint().getYCord() * tileSize;
     }
 
-    private void updateEnemyMove(Enemy e) {
-        if(e.getLastDir() == -1)
-            this.setNewDirectionAndMove(e);
+    private void updateEnemyMove(Enemy e, float speed) {
+        int lastDir = e.getLastDir();
 
-        int newX = (int) (e.getX() + this.getSpeedAndWidth(e.getLastDir()));
-        int newY = (int) (e.getY() + this.getSpeedAndHeight(e.getLastDir()));
+        if(lastDir == -1)
+            this.setNewDirectionAndMove(e, speed);
+
+        int newX = (int) (e.getX() + this.getSpeedAndWidth(speed, lastDir));
+        int newY = (int) (e.getY() + this.getSpeedAndHeight(speed, lastDir));
 
         if(this.getTileType(newX, newY) == ROAD_TILE){
             // keep moving in same direction
-            e.move(e.getLastDir());
+            e.move(speed, e.getLastDir());
         } else if(this.isAtEnd(e)){
             // reached the end
             System.out.println("Lives lost!");
         } else {
             // find new direction
-            this.setNewDirectionAndMove(e);
+            this.setNewDirectionAndMove(e, speed);
         }
     }
 
-    private void setNewDirectionAndMove(Enemy e) {
+    private void setNewDirectionAndMove(Enemy e, float speed) {
         int dir = e.getLastDir();
 
         // move into the current until 100%;
-        int xCord = (int) (e.getX() / GlobalValuesUtil.SPRITE_SIZE);
-        int yCord = (int) (e.getY() / GlobalValuesUtil.SPRITE_SIZE);
+        int xCord = (int) (e.getX() / spriteSize);
+        int yCord = (int) (e.getY() / spriteSize);
 
         this.fixEnemyOffSetTile(e, dir, xCord, yCord);
 
@@ -85,17 +85,17 @@ public class EnemyManager {
             return;
 
         if(dir == LEFT || dir == RIGHT){
-            int newY = (int) (e.getY() + this.getSpeedAndHeight(UP));
+            int newY = (int) (e.getY() + this.getSpeedAndHeight(speed, UP));
             if(this.getTileType((int) e.getX(), newY) == ROAD_TILE)
-                e.move(UP);
+                e.move(speed,UP);
             else
-                e.move(DOWN);
+                e.move(speed,DOWN);
         } else {
-            int newX = (int) (e.getX() + this.getSpeedAndWidth(RIGHT));
+            int newX = (int) (e.getX() + this.getSpeedAndWidth(speed, RIGHT));
             if(this.getTileType(newX, (int) e.getY()) == ROAD_TILE)
-                e.move(RIGHT);
+                e.move(speed, RIGHT);
             else
-                e.move(LEFT);
+                e.move(speed, LEFT);
         }
     }
 
@@ -103,37 +103,37 @@ public class EnemyManager {
         switch(dir){
             case RIGHT:
                 // there are 20 tiles, but as array we need to subtract 1 to work with max_tile = 19
-                if(xCord < GlobalValuesUtil.SCREEN_WIDTH / GlobalValuesUtil.SPRITE_SIZE - 1)
+                if(xCord < GlobalValuesUtil.SCREEN_WIDTH / spriteSize - 1)
                     xCord++;
                 break;
             case DOWN:
                 // there are 20 tiles, but as array we need to subtract 1 to work with max_tile = 19
-                if(yCord < GlobalValuesUtil.SCREEN_HEIGHT / GlobalValuesUtil.SPRITE_SIZE - 1)
+                if(yCord < GlobalValuesUtil.SCREEN_HEIGHT / spriteSize - 1)
                     yCord++;
                 break;
         }
 
-        e.setPos(xCord * GlobalValuesUtil.SPRITE_SIZE, yCord * GlobalValuesUtil.SPRITE_SIZE);
+        e.setPos(xCord * spriteSize, yCord * spriteSize);
     }
 
     private int getTileType(int x, int y) {
         return playing.getTileType(x, y);
     }
 
-    private float getSpeedAndHeight(int dir) {
+    private float getSpeedAndHeight(float speed, int dir) {
         if(dir == UP)
-            return -GlobalValuesUtil.ENEMY_SPEED;
+            return -speed;
         else if(dir == DOWN)
-            return GlobalValuesUtil.ENEMY_SPEED + GlobalValuesUtil.SPRITE_SIZE;
+            return speed + spriteSize;
 
         return 0;
     }
 
-    private float getSpeedAndWidth(int dir) {
+    private float getSpeedAndWidth(float speed, int dir) {
         if(dir == LEFT)
-            return -GlobalValuesUtil.ENEMY_SPEED;
+            return -speed;
         else if(dir == RIGHT)
-            return GlobalValuesUtil.ENEMY_SPEED + GlobalValuesUtil.SPRITE_SIZE;
+            return speed + spriteSize;
 
         return 0;
     }
@@ -142,10 +142,10 @@ public class EnemyManager {
         int x = this.playing.getStartPathPoint().getXCord();
         int y = this.playing.getStartPathPoint().getYCord();
         switch (enemyType) {
-            case ORC -> enemies.add(new Orc(x * GlobalValuesUtil.DEFAULT_MAP_TILE_SIZE, y * GlobalValuesUtil.DEFAULT_MAP_TILE_SIZE, ORC));
-            case BAT -> enemies.add(new Bat(x * GlobalValuesUtil.DEFAULT_MAP_TILE_SIZE, y * GlobalValuesUtil.DEFAULT_MAP_TILE_SIZE, BAT));
-            case KNIGHT -> enemies.add(new Knight(x * GlobalValuesUtil.DEFAULT_MAP_TILE_SIZE, y * GlobalValuesUtil.DEFAULT_MAP_TILE_SIZE, KNIGHT));
-            case WOLF -> enemies.add(new Wolf(x * GlobalValuesUtil.DEFAULT_MAP_TILE_SIZE, y * GlobalValuesUtil.DEFAULT_MAP_TILE_SIZE, WOLF));
+            case ORC -> enemies.add(new Orc(x * tileSize, y * tileSize, ORC));
+            case BAT -> enemies.add(new Bat(x * tileSize, y * tileSize, BAT));
+            case KNIGHT -> enemies.add(new Knight(x * tileSize, y * tileSize, KNIGHT));
+            case WOLF -> enemies.add(new Wolf(x * tileSize, y * tileSize, WOLF));
         }
     }
 

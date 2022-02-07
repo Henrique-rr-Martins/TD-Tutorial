@@ -22,21 +22,21 @@ public abstract class Enemy {
         this.lastDir = -1;
     }
 
-    public void move(int dir){
+    public void move(float speed, int dir){
         this.lastDir = dir;
 
         switch(dir){
             case LEFT:
-                this.x -= GlobalValuesUtil.ENEMY_SPEED;
+                this.x -= speed;
                 break;
             case UP:
-                this.y -= GlobalValuesUtil.ENEMY_SPEED;
+                this.y -= speed;
                 break;
             case RIGHT:
-                this.x += GlobalValuesUtil.ENEMY_SPEED;
+                this.x += speed;
                 break;
             case DOWN:
-                this.y += GlobalValuesUtil.ENEMY_SPEED;
+                this.y += speed;
                 break;
         }
     }
