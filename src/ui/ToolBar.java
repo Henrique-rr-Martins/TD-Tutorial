@@ -22,6 +22,14 @@ public class ToolBar extends Bar {
     private BufferedImage pathStart, pathEnd;
     private Tile selectedTile;
 
+    private int buttonSize = GlobalValuesUtil.BUTTON_SQUARE_SIDE;
+    private int spriteSize = GlobalValuesUtil.SPRITE_SIZE;
+    private int xButtonPosition = GlobalValuesUtil.X_BUTTON_POSITION;
+    private int yButtonPosition = GlobalValuesUtil.Y_BUTTON_POSITION;
+    private int xButtonOffset = GlobalValuesUtil.BUTTON_X_OFFSET;
+    private int yButtonOffset = GlobalValuesUtil.BUTTON_Y_OFFSET;
+    private int initialXTilePosition = GlobalValuesUtil.INITIAL_X_TILE_POSITION;
+
 //    private ArrayList<MyButton> tileButtons = new ArrayList<>();
     private Map<MyButton, ArrayList<Tile>> map = new HashMap<>();
 
@@ -37,103 +45,27 @@ public class ToolBar extends Bar {
     }
 
     private void initPathImgs() {
-        this.pathStart = LoadSave.getSpriteAtlas().getSubimage(GlobalValuesUtil.SPRITE_SIZE * 7,
-                GlobalValuesUtil.SPRITE_SIZE * 2,
-                GlobalValuesUtil.SPRITE_SIZE,
-                GlobalValuesUtil.SPRITE_SIZE);
-        this.pathEnd = LoadSave.getSpriteAtlas().getSubimage(GlobalValuesUtil.SPRITE_SIZE * 8,
-                GlobalValuesUtil.SPRITE_SIZE * 2,
-                GlobalValuesUtil.SPRITE_SIZE,
-                GlobalValuesUtil.SPRITE_SIZE);
+        this.pathStart = LoadSave.getSpriteAtlas().getSubimage(spriteSize * 7, spriteSize * 2, spriteSize, spriteSize);
+        this.pathEnd = LoadSave.getSpriteAtlas().getSubimage(spriteSize * 8, spriteSize * 2, spriteSize, spriteSize);
     }
 
     private void initButtons() {
         int i = 0;
 
-        this.bMenu = new MyButton("Menu",
-                GlobalValuesUtil.X_BUTTON_POSITION,
-                GlobalValuesUtil.Y_BUTTON_POSITION,
-                GlobalValuesUtil.BUTTON_SQUARE_SIDE,
-                GlobalValuesUtil.BUTTON_SQUARE_SIDE);
+        this.bMenu = new MyButton("Menu", xButtonPosition, yButtonPosition, buttonSize, buttonSize);
+        this.bSave = new MyButton("Save", xButtonPosition + xButtonOffset, yButtonPosition, buttonSize, buttonSize);
 
-        this.bSave = new MyButton("Save",
-                GlobalValuesUtil.X_BUTTON_POSITION + GlobalValuesUtil.BUTTON_X_OFFSET,
-                GlobalValuesUtil.Y_BUTTON_POSITION,
-                GlobalValuesUtil.BUTTON_SQUARE_SIDE,
-                GlobalValuesUtil.BUTTON_SQUARE_SIDE);
+        this.bGrass = new MyButton("Grass", xButtonPosition + xButtonOffset * 2, yButtonPosition, buttonSize, buttonSize, i++);
+        this.bWater = new MyButton("Water", xButtonPosition + xButtonOffset * 3, yButtonPosition, buttonSize, buttonSize, i++);
 
-        this.bGrass = new MyButton("Grass",
-                GlobalValuesUtil.X_BUTTON_POSITION + GlobalValuesUtil.BUTTON_X_OFFSET * 2,
-                GlobalValuesUtil.Y_BUTTON_POSITION,
-                GlobalValuesUtil.BUTTON_SQUARE_SIDE,
-                GlobalValuesUtil.BUTTON_SQUARE_SIDE,
-                i++);
+        this.initMapButton(bRoadStraight, editing.getGame().getTileManager().getRoadsStraight(), xButtonPosition + xButtonOffset, yButtonPosition, xButtonOffset, buttonSize, buttonSize, i++);
+        this.initMapButton(bRoadCorner, editing.getGame().getTileManager().getRoadsCorner(), xButtonPosition + xButtonOffset, yButtonPosition, xButtonOffset, buttonSize, buttonSize, i++);
+        this.initMapButton(bWaterCorner, editing.getGame().getTileManager().getWaterCorner(), xButtonPosition + xButtonOffset, yButtonPosition, xButtonOffset, buttonSize, buttonSize, i++);
+        this.initMapButton(bBeaches, editing.getGame().getTileManager().getBeaches(), xButtonPosition + xButtonOffset, yButtonPosition, xButtonOffset, buttonSize, buttonSize, i++);
+        this.initMapButton(bIsland, editing.getGame().getTileManager().getIslands(), xButtonPosition + xButtonOffset, yButtonPosition, xButtonOffset, buttonSize, buttonSize, i++);
 
-        this.bWater = new MyButton("Water",
-                GlobalValuesUtil.X_BUTTON_POSITION + GlobalValuesUtil.BUTTON_X_OFFSET * 3,
-                GlobalValuesUtil.Y_BUTTON_POSITION,
-                GlobalValuesUtil.BUTTON_SQUARE_SIDE,
-                GlobalValuesUtil.BUTTON_SQUARE_SIDE,
-                i++);
-
-        this.initMapButton(bRoadStraight,
-                editing.getGame().getTileManager().getRoadsStraight(),
-                GlobalValuesUtil.X_BUTTON_POSITION + GlobalValuesUtil.BUTTON_X_OFFSET,
-                GlobalValuesUtil.Y_BUTTON_POSITION,
-                GlobalValuesUtil.BUTTON_X_OFFSET,
-                GlobalValuesUtil.BUTTON_SQUARE_SIDE,
-                GlobalValuesUtil.BUTTON_SQUARE_SIDE,
-                i++);
-
-        this.initMapButton(bRoadCorner,
-                editing.getGame().getTileManager().getRoadsCorner(),
-                GlobalValuesUtil.X_BUTTON_POSITION + GlobalValuesUtil.BUTTON_X_OFFSET,
-                GlobalValuesUtil.Y_BUTTON_POSITION,
-                GlobalValuesUtil.BUTTON_X_OFFSET,
-                GlobalValuesUtil.BUTTON_SQUARE_SIDE,
-                GlobalValuesUtil.BUTTON_SQUARE_SIDE,
-                i++);
-
-        this.initMapButton(bWaterCorner,
-                editing.getGame().getTileManager().getWaterCorner(),
-                GlobalValuesUtil.X_BUTTON_POSITION + GlobalValuesUtil.BUTTON_X_OFFSET,
-                GlobalValuesUtil.Y_BUTTON_POSITION,
-                GlobalValuesUtil.BUTTON_X_OFFSET,
-                GlobalValuesUtil.BUTTON_SQUARE_SIDE,
-                GlobalValuesUtil.BUTTON_SQUARE_SIDE,
-                i++);
-
-        this.initMapButton(bBeaches,
-                editing.getGame().getTileManager().getBeaches(),
-                GlobalValuesUtil.X_BUTTON_POSITION + GlobalValuesUtil.BUTTON_X_OFFSET,
-                GlobalValuesUtil.Y_BUTTON_POSITION,
-                GlobalValuesUtil.BUTTON_X_OFFSET,
-                GlobalValuesUtil.BUTTON_SQUARE_SIDE,
-                GlobalValuesUtil.BUTTON_SQUARE_SIDE,
-                i++);
-
-        this.initMapButton(bIsland,
-                editing.getGame().getTileManager().getIslands(),
-                GlobalValuesUtil.X_BUTTON_POSITION + GlobalValuesUtil.BUTTON_X_OFFSET,
-                GlobalValuesUtil.Y_BUTTON_POSITION,
-                GlobalValuesUtil.BUTTON_X_OFFSET,
-                GlobalValuesUtil.BUTTON_SQUARE_SIDE,
-                GlobalValuesUtil.BUTTON_SQUARE_SIDE,
-                i++);
-
-        this.bPathStart = new MyButton("PathStart",
-                GlobalValuesUtil.X_BUTTON_POSITION + GlobalValuesUtil.BUTTON_X_OFFSET * 2,
-                GlobalValuesUtil.Y_BUTTON_POSITION + GlobalValuesUtil.BUTTON_Y_OFFSET,
-                GlobalValuesUtil.BUTTON_SQUARE_SIDE,
-                GlobalValuesUtil.BUTTON_SQUARE_SIDE,
-                i++);
-
-        this.bPathEnd = new MyButton("PathEnd",
-                GlobalValuesUtil.X_BUTTON_POSITION + GlobalValuesUtil.BUTTON_X_OFFSET * 3,
-                GlobalValuesUtil.Y_BUTTON_POSITION + GlobalValuesUtil.BUTTON_Y_OFFSET,
-                GlobalValuesUtil.BUTTON_SQUARE_SIDE,
-                GlobalValuesUtil.BUTTON_SQUARE_SIDE,
-                i++);
+        this.bPathStart = new MyButton("PathStart", xButtonPosition + xButtonOffset * 2, yButtonPosition + yButtonOffset, buttonSize, buttonSize, i++);
+        this.bPathEnd = new MyButton("PathEnd", xButtonPosition + xButtonOffset * 3, yButtonPosition + yButtonOffset, buttonSize, buttonSize, i++);
     }
 
     private void initMapButton(MyButton b, ArrayList<Tile> list, int x, int y, int xOff, int w, int h, int id){
@@ -195,39 +127,15 @@ public class ToolBar extends Bar {
             BufferedImage img = entry.getValue().get(0).getSprite();
 
             g.drawImage(img, b.x, b.y, b.width, b.height, null);
-            this.drawButtonFeedback(g, b);
-        }
-    }
-
-    private void drawButtonFeedback(Graphics g, MyButton b){
-        // mouse over
-        if(b.isMouseOver()){
-            g.setColor(Color.WHITE);
-        }else{
-            g.setColor(Color.BLACK);
-        }
-        // border
-        g.drawRect(b.x, b.y, b.width, b.height);
-        // mouse pressed
-        if(b.isMousePressed()){
-            g.drawRect(b.x + 1, b.y + 1, b.width - 1, b.height - 2);
-            g.drawRect(b.x + 2, b.y + 2, b.width - 4, b.height - 4);
+            super.drawButtonFeedback(g, b);
         }
     }
 
     private void drawSelectedTile(Graphics g) {
         if(selectedTile != null){
-            g.drawImage(this.selectedTile.getSprite(),
-                    GlobalValuesUtil.INITIAL_X_TILE_POSITION,
-                    GlobalValuesUtil.Y_BUTTON_POSITION,
-                    GlobalValuesUtil.BUTTON_SQUARE_SIDE,
-                    GlobalValuesUtil.BUTTON_SQUARE_SIDE,
-                    null);
+            g.drawImage(this.selectedTile.getSprite(), initialXTilePosition, yButtonPosition, buttonSize, buttonSize, null);
             g.setColor(Color.BLACK);
-            g.drawRect(GlobalValuesUtil.INITIAL_X_TILE_POSITION,
-                    GlobalValuesUtil.Y_BUTTON_POSITION,
-                    GlobalValuesUtil.BUTTON_SQUARE_SIDE,
-                    GlobalValuesUtil.BUTTON_SQUARE_SIDE);
+            g.drawRect(initialXTilePosition, yButtonPosition, buttonSize, buttonSize);
         }
     }
 

@@ -1,17 +1,21 @@
 package enemies;
 
+import util.ConstantsUtil;
 import util.GlobalValuesUtil;
 
 import java.awt.*;
 import static util.ConstantsUtil.Direction.*;
+import static util.ConstantsUtil.Enemies.*;
 
 public abstract class Enemy {
     private float x, y;
     private Rectangle bounds;
     private int health;
+    private int maxHealth;
     private int id;
     private int enemyType;
     private int lastDir;
+    private boolean alive = true;
 
     public Enemy(float x, float y, int id, int enemyType){
         this.x = x;
@@ -20,6 +24,12 @@ public abstract class Enemy {
         this.enemyType = enemyType;
         this.bounds = new Rectangle((int)x, (int)y, GlobalValuesUtil.SPRITE_SIZE, GlobalValuesUtil.SPRITE_SIZE);
         this.lastDir = -1;
+        this.setStartHealth();
+    }
+
+    protected void setStartHealth(){
+        this.health = getStartHealth(enemyType);
+        this.maxHealth = health;
     }
 
     public void move(float speed, int dir){
@@ -39,6 +49,13 @@ public abstract class Enemy {
                 this.y += speed;
                 break;
         }
+
+        this.updateHitBox();
+    }
+
+    protected void updateHitBox(){
+        bounds.x = (int) x;
+        bounds.y = (int) y;
     }
 
     public void setPos(int x, int y){
@@ -48,6 +65,14 @@ public abstract class Enemy {
         this.y = y;
     }
 
+    public float getHealthBarPercent(){ return health / (float) maxHealth; }
+
+    public void hurt(int dmg){
+        this.health -= dmg;
+        if(health <= 0){
+            this.alive = false;
+        }
+    }
 
     public float getX() { return x; }
     public float getY() { return y; }
@@ -56,4 +81,5 @@ public abstract class Enemy {
     public int getId() { return id; }
     public int getEnemyType() { return enemyType; }
     public int getLastDir(){ return this.lastDir; }
+    public boolean isAlive(){ return this.alive; }
 }
