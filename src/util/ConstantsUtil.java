@@ -9,9 +9,9 @@ public class ConstantsUtil {
 
         public static float getSpeed(int projectileType){
             return switch(projectileType){
-                case ARROW -> 3f;
-                case CHAINS -> 1f;
-                case BOMB -> 2f;
+                case ARROW -> 8f;
+                case BOMB -> 4f;
+                case CHAINS -> 6f;
                 default -> 0f;
             };
         }
@@ -83,9 +83,9 @@ public class ConstantsUtil {
 
         public static float getDefaultCooldown(int towerType){
             return switch(towerType){
-                case CANNON -> 25;
-                case ARCHER -> 15;
-                case WIZARD -> 5;
+                case CANNON -> 120;
+                case ARCHER -> 25;
+                case WIZARD -> 40;
                 default -> 1f;
             };
         }
@@ -101,9 +101,9 @@ public class ConstantsUtil {
 
         public static int getStartDamage(int towerType){
             return switch(towerType){
-                case CANNON -> 10;
-                case ARCHER -> 10;
-                case WIZARD -> 10;
+                case CANNON -> 15;
+                case ARCHER -> 5;
+                case WIZARD -> 0;
                 default -> 1;
             };
         }

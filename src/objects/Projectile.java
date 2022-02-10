@@ -1,6 +1,7 @@
 package objects;
 
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 
 public class Projectile {
 
@@ -23,6 +24,10 @@ public class Projectile {
         this.pos.x += xSpeed;
         this.pos.y += ySpeed;
     }
+
+
+
+
 
     public Point2D.Float getPos() { return pos; }
     public void setPos(Point2D.Float pos) { this.pos = pos; }

@@ -17,6 +17,7 @@ public class EnemyManager {
     private final Playing playing;
     private final BufferedImage[] enemyImgs;
     private final ArrayList<Enemy> enemies = new ArrayList<>();
+    ArrayList<Enemy> enemiesToDestroy = new ArrayList<>();
     private final int barHeight = 3;
     private final int hpBarWidth = SPRITE_SIZE;
 
@@ -42,17 +43,18 @@ public class EnemyManager {
     }
 
     public void update() {
-        ArrayList<Enemy> deadEnemies = new ArrayList<>();
 
         for (Enemy e : enemies)
             if (e.isAlive())
                 this.updateEnemyMove(e, getSpeed(e.getEnemyType()));
             else
-                deadEnemies.add(e);
+                enemiesToDestroy.add(e);
 
-        for (Enemy e : deadEnemies) {
+        for (Enemy e : enemiesToDestroy) {
             this.enemies.remove(e);
         }
+
+        this.enemiesToDestroy.clear();
     }
 
     private boolean isAtEnd(Enemy e) {

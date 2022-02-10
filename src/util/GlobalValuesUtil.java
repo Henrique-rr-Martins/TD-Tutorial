@@ -51,4 +51,6 @@ public class GlobalValuesUtil {
 
     // projectiles
     public static final int PROJECTILE_AMOUNT = 3;
+    public static final int EXPLOSION_IMGS_AMOUNT = 7;
+    public static final float EXPLOSION_RADIUS = 40;
 }
