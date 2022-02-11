@@ -138,6 +138,8 @@ public class ProjectileManager {
         for (Enemy e : playing.getEnemyManager().getEnemies()) {
             if (e.isAlive() && e.getBounds().contains(p.getPos())) {
                 e.hurt(p.getDmg());
+                if(p.getProjectileType() == CHAINS)
+                    e.slow();
 
                 return true;
             }

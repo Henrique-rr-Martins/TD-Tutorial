@@ -20,6 +20,7 @@ public class EnemyManager {
     ArrayList<Enemy> enemiesToDestroy = new ArrayList<>();
     private final int barHeight = 3;
     private final int hpBarWidth = SPRITE_SIZE;
+    private BufferedImage slowEffectImage;
 
     private final int tileSize = DEFAULT_MAP_TILE_SIZE;
     private final int spriteSize = SPRITE_SIZE;
@@ -27,12 +28,17 @@ public class EnemyManager {
     public EnemyManager(Playing playing) {
         this.playing = playing;
         this.enemyImgs = new BufferedImage[ENEMY_IMAGES_AMOUNT];
+        this.loadEffectImg();
         this.loadEnemyImgs();
 
         this.addEnemy(ORC);
         this.addEnemy(BAT);
         this.addEnemy(KNIGHT);
         this.addEnemy(WOLF);
+    }
+
+    private void loadEffectImg() {
+        this.slowEffectImage = LoadSave.getSpriteAtlas().getSubimage(9 * SPRITE_SIZE, 2 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE);
     }
 
     private void loadEnemyImgs() {
@@ -165,7 +171,14 @@ public class EnemyManager {
             if (e.isAlive()) {
                 this.drawEnemy(e, g);
                 this.drawHealthBar(e, g);
+                this.drawEffects(e, g);
             }
+        }
+    }
+
+    private void drawEffects(Enemy e, Graphics g) {
+        if(e.isSlowed()){
+            g.drawImage(this.slowEffectImage, (int) e.getX(), (int) e.getY(), null);
         }
     }
 
