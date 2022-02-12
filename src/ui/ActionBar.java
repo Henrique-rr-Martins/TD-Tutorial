@@ -6,6 +6,7 @@ import util.ConstantsUtil;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.text.DecimalFormat;
 
 import static main.GameStates.MENU;
 import static main.GameStates.setGameState;
@@ -20,9 +21,13 @@ public class ActionBar extends Bar {
     private Tower selectedTower;
     private Tower displayedTower;
 
+    private DecimalFormat formatter;
+
     public ActionBar(int x, int y, int width, int height, Playing playing) {
         super(x, y, width, height);
         this.playing = playing;
+
+        this.formatter = new DecimalFormat("0.0");
 
         this.initButtons();
     }
@@ -60,6 +65,39 @@ public class ActionBar extends Bar {
         this.drawButtons(g);
         // display tower status
         this.drawDisplayedTower(g);
+        // wave info
+        this.drawWaveInfo(g);
+    }
+
+    private void drawWaveInfo(Graphics g) {
+
+        g.setColor(Color.BLACK);
+        g.setFont(new Font("LucidaSans", Font.BOLD, 20));
+
+        this.drawWaveTimerInfo(g);
+        this.drawEnemiesLeftInfo(g);
+        this.drawWavesLeftInfo(g);
+    }
+
+    private void drawWavesLeftInfo(Graphics g) {
+        int current = this.playing.getWaveManager().getWaveIndex();
+        int size = this.playing.getWaveManager().getWaves().size();
+        g.drawString("Wave " + (current +1) + " / " + size, 425, 660);
+    }
+
+    private void drawEnemiesLeftInfo(Graphics g) {
+        int remaining = this.playing.getEnemyManager().getAmountOfAliveEnemies();
+        int waveSize = this.playing.getWaveManager().getWaves().get(this.playing.getWaveManager().getWaveIndex()).getEnemyList().size();
+        g.drawString("Enemies left: " + remaining + " / " + waveSize, 425, 690);
+    }
+
+    private void drawWaveTimerInfo(Graphics g){
+        if(this.playing.getWaveManager().isWaveTimerStarted()){
+            float timeLeft = this.playing.getWaveManager().getTimeLeft();
+            String formattedText = this.formatter.format(timeLeft);
+
+            g.drawString("Time left: " + formattedText, 425, 720);
+        }
     }
 
     private void drawDisplayedTower(Graphics g) {

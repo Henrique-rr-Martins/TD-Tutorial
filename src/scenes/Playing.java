@@ -47,20 +47,45 @@ public class Playing extends GameScene implements SceneMethods{
 
     public void update(){
         this.updateTick();
+        this.waveManager.update();
+
+        if(!this.waveManager.isThereMoreEnemiesInWave() && this.isAllEnemiesDead()){
+            if(this.isThereMoreWaves()){
+                this.waveManager.startWaveTimer();
+                if(this.isWaveTimerOver()) {
+                    this.waveManager.increaseWaveIndex();
+                    this.enemyManager.getEnemies().clear();
+                    this.waveManager.resetEnemyIndex();
+                }
+            }
+        }
+
+        if(this.isTimeForNewEnemy()){
+            this.spawnEnemy();
+        }
+
         this.enemyManager.update();
         this.towerManager.update();
         this.projectileManager.update();
     }
 
+    private boolean isAllEnemiesDead() {
+        for(Enemy e : this.enemyManager.getEnemies())
+            if(e.isAlive()) return false;
+
+        return true;
+    }
+
     @Override
     public void render(Graphics g) {
         this.drawLevel(g);
+        this.actionBar.draw(g);
         this.enemyManager.draw(g);
         this.towerManager.draw(g);
         this.projectileManager.draw(g);
+
         this.drawSelectedTower(g);
         this.drawHighlight(g);
-        this.actionBar.draw(g);
     }
 
     private void drawHighlight(Graphics g) {
@@ -89,6 +114,10 @@ public class Playing extends GameScene implements SceneMethods{
 
     public void shootEnemy(Tower t, Enemy e){
         this.projectileManager.newProjectile(t, e);
+    }
+
+    private void spawnEnemy() {
+        this.enemyManager.spawnEnemy(this.waveManager.getNextEnemy());
     }
 
     @Override
@@ -145,4 +174,11 @@ public class Playing extends GameScene implements SceneMethods{
     private Tower getTowerAt(int x, int y) { return towerManager.getTowerAt(mouseX, mouseY); }
     public EnemyManager getEnemyManager(){ return this.enemyManager; }
     public WaveManager getWaveManager(){ return this.waveManager; }
+    private boolean isTimeForNewEnemy() {
+        return this.waveManager.isTimeForNewEnemy() && this.waveManager.isThereMoreEnemiesInWave();
+    }
+    private boolean isThereMoreWaves() { return this.waveManager.isThereMoreWaves(); }
+    private boolean isWaveTimerOver() {
+        return this.waveManager.isWaveTimerOver();
+    }
 }

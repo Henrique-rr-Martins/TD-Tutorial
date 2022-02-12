@@ -86,4 +86,12 @@ public abstract class Enemy {
     public int getLastDir(){ return this.lastDir; }
     public boolean isAlive(){ return this.alive; }
     public boolean isSlowed(){ return this.slowTick < this.slowTickLimit; }
+
+    /**
+     * To kill the enemy when it reaches the end.
+     */
+    public void kill(){
+        this.alive = false;
+        this.health = 0;
+    }
 }

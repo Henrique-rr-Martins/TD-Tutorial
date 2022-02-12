@@ -17,8 +17,6 @@ public class EnemyManager {
     private final Playing playing;
     private final BufferedImage[] enemyImgs;
     private final ArrayList<Enemy> enemies = new ArrayList<>();
-    ArrayList<Enemy> enemiesToDestroy = new ArrayList<>();
-    private final int barHeight = 3;
     private final int hpBarWidth = SPRITE_SIZE;
     private BufferedImage slowEffectImage;
 
@@ -30,11 +28,6 @@ public class EnemyManager {
         this.enemyImgs = new BufferedImage[ENEMY_IMAGES_AMOUNT];
         this.loadEffectImg();
         this.loadEnemyImgs();
-
-//        this.addEnemy(ORC);
-//        this.addEnemy(BAT);
-//        this.addEnemy(KNIGHT);
-//        this.addEnemy(WOLF);
     }
 
     private void loadEffectImg() {
@@ -49,38 +42,10 @@ public class EnemyManager {
     }
 
     public void update() {
-        this.updateWaveManager();
-        if(this.isTimeForNewEnemy()){
-            this.spawnEnemy();
-        }
 
         for (Enemy e : enemies)
             if (e.isAlive())
                 this.updateEnemyMove(e, getSpeed(e.getEnemyType()));
-            else
-                enemiesToDestroy.add(e);
-
-        for (Enemy e : enemiesToDestroy) {
-            this.enemies.remove(e);
-        }
-
-        this.enemiesToDestroy.clear();
-    }
-
-    private void updateWaveManager() {
-        this.playing.getWaveManager().update();
-    }
-
-    private void spawnEnemy() {
-        this.addEnemy(this.playing.getWaveManager().getNextEnemy());
-    }
-
-    private boolean isTimeForNewEnemy() {
-        if(this.playing.getWaveManager().isTimeForNewEnemy() &&
-                this.playing.getWaveManager().isThereMoreEnemiesInWave())
-            return true;
-
-        return false;
     }
 
     private boolean isAtEnd(Enemy e) {
@@ -102,7 +67,7 @@ public class EnemyManager {
             e.move(speed, e.getLastDir());
         } else if (this.isAtEnd(e)) {
             // reached the end
-            System.out.println("Lives lost!");
+            e.kill();
         } else {
             // find new direction
             this.setNewDirectionAndMove(e, speed);
@@ -175,7 +140,11 @@ public class EnemyManager {
         return 0;
     }
 
-    public void addEnemy(int enemyType) {
+    public void spawnEnemy(int nextEnemy) {
+        this.addEnemy(nextEnemy);
+    }
+
+    private void addEnemy(int enemyType) {
         int x = this.playing.getStartPathPoint().getXCord();
         int y = this.playing.getStartPathPoint().getYCord();
         switch (enemyType) {
@@ -203,15 +172,12 @@ public class EnemyManager {
     }
 
     private void drawHealthBar(Enemy e, Graphics g) {
+        int barHeight = 3;
         this.defineHealthBarColor(e, g);
         g.fillRect((int) e.getX() + (hpBarWidth - this.getNewBarWidth(e)) / 2,
                 (int) e.getY() - barHeight,
                 this.getNewBarWidth(e),
                 barHeight);
-    }
-
-    private int getNewBarWidth(Enemy e) {
-        return (int) (this.hpBarWidth * e.getHealthBarPercent());
     }
 
     private void defineHealthBarColor(Enemy e, Graphics g) {
@@ -223,11 +189,16 @@ public class EnemyManager {
             g.setColor(Color.RED);
     }
 
-    private void drawEnemy(Enemy e, Graphics g) {
-        g.drawImage(enemyImgs[e.getEnemyType()], (int) e.getX(), (int) e.getY(), null);
-    }
+    private int getNewBarWidth(Enemy e) { return (int) (this.hpBarWidth * e.getHealthBarPercent()); }
+    private void drawEnemy(Enemy e, Graphics g) { g.drawImage(enemyImgs[e.getEnemyType()], (int) e.getX(), (int) e.getY(), null); }
+    public ArrayList<Enemy> getEnemies() { return enemies; }
+    public int getAmountOfAliveEnemies() {
+        int size = 0;
 
-    public ArrayList<Enemy> getEnemies() {
-        return enemies;
+        for(Enemy e : this.enemies)
+            if(e.isAlive())
+                size++;
+
+        return size;
     }
 }
