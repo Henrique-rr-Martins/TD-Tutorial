@@ -31,10 +31,10 @@ public class EnemyManager {
         this.loadEffectImg();
         this.loadEnemyImgs();
 
-        this.addEnemy(ORC);
-        this.addEnemy(BAT);
-        this.addEnemy(KNIGHT);
-        this.addEnemy(WOLF);
+//        this.addEnemy(ORC);
+//        this.addEnemy(BAT);
+//        this.addEnemy(KNIGHT);
+//        this.addEnemy(WOLF);
     }
 
     private void loadEffectImg() {
@@ -49,6 +49,10 @@ public class EnemyManager {
     }
 
     public void update() {
+        this.updateWaveManager();
+        if(this.isTimeForNewEnemy()){
+            this.spawnEnemy();
+        }
 
         for (Enemy e : enemies)
             if (e.isAlive())
@@ -61,6 +65,22 @@ public class EnemyManager {
         }
 
         this.enemiesToDestroy.clear();
+    }
+
+    private void updateWaveManager() {
+        this.playing.getWaveManager().update();
+    }
+
+    private void spawnEnemy() {
+        this.addEnemy(this.playing.getWaveManager().getNextEnemy());
+    }
+
+    private boolean isTimeForNewEnemy() {
+        if(this.playing.getWaveManager().isTimeForNewEnemy() &&
+                this.playing.getWaveManager().isThereMoreEnemiesInWave())
+            return true;
+
+        return false;
     }
 
     private boolean isAtEnd(Enemy e) {

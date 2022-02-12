@@ -5,9 +5,9 @@ import main.Game;
 import managers.EnemyManager;
 import managers.ProjectileManager;
 import managers.TowerManager;
+import managers.WaveManager;
 import objects.Tower;
 import ui.ActionBar;
-import util.GlobalValuesUtil;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -22,6 +22,7 @@ public class Playing extends GameScene implements SceneMethods{
     private EnemyManager enemyManager;
     private TowerManager towerManager;
     private ProjectileManager projectileManager;
+    private WaveManager waveManager;
 
     private Tower selectedTower;
 
@@ -37,6 +38,7 @@ public class Playing extends GameScene implements SceneMethods{
         this.enemyManager = new EnemyManager(this);
         this.towerManager = new TowerManager(this);
         this.projectileManager = new ProjectileManager(this);
+        this.waveManager = new WaveManager(this);
     }
 
     public void setLevel(int[][] lvl) {
@@ -142,4 +144,5 @@ public class Playing extends GameScene implements SceneMethods{
     private boolean isTileGrass() { return this.getTileType(mouseX, mouseY) == GRASS_TILE; }
     private Tower getTowerAt(int x, int y) { return towerManager.getTowerAt(mouseX, mouseY); }
     public EnemyManager getEnemyManager(){ return this.enemyManager; }
+    public WaveManager getWaveManager(){ return this.waveManager; }
 }
