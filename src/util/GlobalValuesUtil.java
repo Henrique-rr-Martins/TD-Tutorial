@@ -33,12 +33,12 @@ public class GlobalValuesUtil {
     public static final int INITIAL_X_TILE_POSITION = 640 - (BUTTON_SQUARE_SIDE + X_BUTTON_POSITION);
 
     // data tower display
-    public static final int DATA_TOWER_DISPLAY_SIZE = 60;
-    public static final int X_TOWER_TILE_POSITION = (int) (640 - (BUTTON_SQUARE_SIDE + X_BUTTON_POSITION) - DATA_TOWER_DISPLAY_SIZE * 2.5f);
-    public static final int Y_TOWER_TILE_POSITION = 640 + (100 - BUTTON_SQUARE_SIDE) / 2;
+    public static final int DATA_TOWER_DISPLAY_SIZE = 30;
+    public static final int X_TOWER_TILE_POSITION = (int) (640 - (BUTTON_SQUARE_SIDE + X_BUTTON_POSITION) - DATA_TOWER_DISPLAY_SIZE * 2.5f) - 30;
+    public static final int Y_TOWER_TILE_POSITION = 640 + (100 - BUTTON_SQUARE_SIDE) / 2 - 15;
     public static final int X_TOWER_NAME_POSITION = X_TOWER_TILE_POSITION  + DATA_TOWER_DISPLAY_SIZE + 10;
-    public static final int Y_TOWER_NAME_POSITION = Y_TOWER_TILE_POSITION + 10;
-    public static final int Y_TOWER_ID_POSITION = Y_TOWER_TILE_POSITION + 25;
+    public static final int Y_TOWER_NAME_POSITION = Y_TOWER_TILE_POSITION + 20;
+    public static final int Y_TOWER_ID_POSITION = Y_TOWER_NAME_POSITION + 15;
 
     // animations
     public static final int TILE_ANIMATION_SPEED = 20;

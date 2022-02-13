@@ -1,5 +1,6 @@
 package enemies;
 
+import managers.EnemyManager;
 import util.ConstantsUtil;
 import util.GlobalValuesUtil;
 
@@ -8,6 +9,8 @@ import static util.ConstantsUtil.Direction.*;
 import static util.ConstantsUtil.Enemies.*;
 
 public abstract class Enemy {
+
+    protected EnemyManager enemyManager;
     private float x, y;
     private Rectangle bounds;
     private int health;
@@ -19,7 +22,8 @@ public abstract class Enemy {
     protected int slowTickLimit = 120;
     protected int slowTick = slowTickLimit;
 
-    public Enemy(float x, float y, int id, int enemyType){
+    public Enemy(float x, float y, int id, int enemyType, EnemyManager enemyManager){
+        this.enemyManager = enemyManager;
         this.x = x;
         this.y = y;
         this.id = id;
@@ -72,8 +76,9 @@ public abstract class Enemy {
 
     public void hurt(int dmg){
         this.health -= dmg;
-        if(health <= 0){
+        if(health <= 0) {
             this.alive = false;
+            this.enemyManager.rewardPlayer(getReward(this.enemyType));
         }
     }
 

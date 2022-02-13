@@ -148,10 +148,10 @@ public class EnemyManager {
         int x = this.playing.getStartPathPoint().getXCord();
         int y = this.playing.getStartPathPoint().getYCord();
         switch (enemyType) {
-            case ORC -> enemies.add(new Orc(x * tileSize, y * tileSize, ORC));
-            case BAT -> enemies.add(new Bat(x * tileSize, y * tileSize, BAT));
-            case KNIGHT -> enemies.add(new Knight(x * tileSize, y * tileSize, KNIGHT));
-            case WOLF -> enemies.add(new Wolf(x * tileSize, y * tileSize, WOLF));
+            case ORC -> enemies.add(new Orc(x * tileSize, y * tileSize, ORC, this));
+            case BAT -> enemies.add(new Bat(x * tileSize, y * tileSize, BAT, this));
+            case KNIGHT -> enemies.add(new Knight(x * tileSize, y * tileSize, KNIGHT, this));
+            case WOLF -> enemies.add(new Wolf(x * tileSize, y * tileSize, WOLF, this));
         }
     }
 
@@ -200,5 +200,9 @@ public class EnemyManager {
                 size++;
 
         return size;
+    }
+
+    public void rewardPlayer(int reward) {
+        this.playing.rewardPlayer(reward);
     }
 }

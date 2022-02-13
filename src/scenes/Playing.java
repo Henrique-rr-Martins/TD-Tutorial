@@ -26,6 +26,8 @@ public class Playing extends GameScene implements SceneMethods{
 
     private Tower selectedTower;
 
+    private int goldTick;
+
     public Playing(Game game) {
         super(game);
         // bottom menu
@@ -48,6 +50,11 @@ public class Playing extends GameScene implements SceneMethods{
     public void update(){
         this.updateTick();
         this.waveManager.update();
+
+        // gold tick
+        this.goldTick++;
+        if(this.goldTick % (60 * 3) == 0)
+            this.rewardPlayer(1);
 
         if(!this.waveManager.isThereMoreEnemiesInWave() && this.isAllEnemiesDead()){
             if(this.isThereMoreWaves()){
@@ -128,6 +135,7 @@ public class Playing extends GameScene implements SceneMethods{
             if(selectedTower != null){
                 if(this.isTileGrass() && this.getTowerAt(mouseX, mouseY) == null) {
                     this.towerManager.addTower(selectedTower, mouseX, mouseY);
+                    this.removeGold(this.selectedTower.getTowerType());
                     this.selectedTower = null;
                 }
             }else{
@@ -136,6 +144,10 @@ public class Playing extends GameScene implements SceneMethods{
             }
         }
 
+    }
+
+    private void removeGold(int towerType) {
+        this.actionBar.payForTower(towerType);
     }
 
     @Override
@@ -168,6 +180,7 @@ public class Playing extends GameScene implements SceneMethods{
         }
     }
 
+    public void rewardPlayer(int reward){ this.actionBar.addGold(reward); }
     public TowerManager getTowerManager(){ return this.towerManager; }
     public void setSelectedTower(Tower selectedTower) { this.selectedTower = selectedTower; }
     private boolean isTileGrass() { return this.getTileType(mouseX, mouseY) == GRASS_TILE; }

@@ -38,13 +38,13 @@ public class ConstantsUtil {
         public static final int KNIGHT = 2;
         public static final int WOLF = 3;
 
-        public static String getEnemyName(int enemyType){
+        public static int getReward(int enemyType){
             return switch (enemyType) {
-                case ORC -> "Orc";
-                case BAT -> "Bat";
-                case KNIGHT -> "Knight";
-                case WOLF -> "Wolf";
-                default -> "";
+                case ORC -> 5;
+                case BAT -> 5;
+                case KNIGHT -> 25;
+                case WOLF -> 10;
+                default -> 0;
             };
         }
 
@@ -74,10 +74,19 @@ public class ConstantsUtil {
 
         public static String getName(int towerType) {
             return switch (towerType) {
-                case CANNON -> "Cannon";
-                case ARCHER -> "Archer";
-                case WIZARD -> "Wizard";
+                case CANNON -> "CANNON";
+                case ARCHER -> "ARCHER";
+                case WIZARD -> "WIZARD";
                 default -> "";
+            };
+        }
+
+        public static int getCost(int towerType){
+            return switch (towerType){
+                case CANNON -> 65;
+                case ARCHER -> 30;
+                case WIZARD -> 45;
+                default -> 0;
             };
         }
 

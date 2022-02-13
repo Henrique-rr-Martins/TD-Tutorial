@@ -11,6 +11,8 @@ import java.text.DecimalFormat;
 import static main.GameStates.MENU;
 import static main.GameStates.setGameState;
 import static util.GlobalValuesUtil.*;
+import static util.ConstantsUtil.Towers.*;
+import static util.ConstantsUtil.Enemies.*;
 
 public class ActionBar extends Bar {
 
@@ -22,6 +24,10 @@ public class ActionBar extends Bar {
     private Tower displayedTower;
 
     private DecimalFormat formatter;
+
+    private int gold = 100;
+    private boolean showTowerCost;
+    private int towerCostType;
 
     public ActionBar(int x, int y, int width, int height, Playing playing) {
         super(x, y, width, height);
@@ -67,12 +73,43 @@ public class ActionBar extends Bar {
         this.drawDisplayedTower(g);
         // wave info
         this.drawWaveInfo(g);
+        // gold info
+        this.drawGoldAmount(g);
+        // draw tower cost
+        if(this.showTowerCost)
+            this.drawTowerCost(g);
+    }
+
+    private void drawTowerCost(Graphics g) {
+        g.setColor(Color.GRAY);
+        g.fillRect(280, Y_BUTTON_POSITION, 120, BUTTON_SQUARE_SIDE);
+        g.setColor(Color.BLACK);
+        g.drawRect(280, Y_BUTTON_POSITION, 120, BUTTON_SQUARE_SIDE);
+
+        g.drawString(getName(this.towerCostType), 285, Y_BUTTON_POSITION + 20);
+        g.drawString("Cost: " + getCost(towerCostType) + "g", 285, Y_BUTTON_POSITION + 35);
+
+        // show if player lacks gold for the selected tower
+        if(!this.isGoldEnoughForTower(this.towerCostType)){
+            g.setColor(Color.RED);
+            var fontMetrics = g.getFontMetrics();
+            g.drawString("Can't afford", 285, Y_BUTTON_POSITION + BUTTON_Y_OFFSET + fontMetrics.getHeight());
+
+            Graphics2D g2d = (Graphics2D) g;
+            g2d.setStroke(new BasicStroke(3));
+            g2d.drawLine(282, Y_BUTTON_POSITION + BUTTON_SQUARE_SIDE - 1, 280  + 120, Y_BUTTON_POSITION + 1);
+        }
+    }
+
+    private void drawGoldAmount(Graphics g) {
+        var fontMetrics = g.getFontMetrics();
+        g.drawString("gold: " + this.gold, X_BUTTON_POSITION + BUTTON_X_OFFSET, Y_BUTTON_POSITION + BUTTON_Y_OFFSET + fontMetrics.getHeight());
     }
 
     private void drawWaveInfo(Graphics g) {
 
         g.setColor(Color.BLACK);
-        g.setFont(new Font("LucidaSans", Font.BOLD, 20));
+        g.setFont(new Font("LucidaSans", Font.BOLD, 15));
 
         this.drawWaveTimerInfo(g);
         this.drawEnemiesLeftInfo(g);
@@ -82,37 +119,37 @@ public class ActionBar extends Bar {
     private void drawWavesLeftInfo(Graphics g) {
         int current = this.playing.getWaveManager().getWaveIndex();
         int size = this.playing.getWaveManager().getWaves().size();
-        g.drawString("Wave " + (current +1) + " / " + size, 425, 660);
+        g.drawString("Wave " + (current +1) + " / " + size, X_TOWER_TILE_POSITION, BUTTON_Y_OFFSET + 670);
     }
 
     private void drawEnemiesLeftInfo(Graphics g) {
         int remaining = this.playing.getEnemyManager().getAmountOfAliveEnemies();
         int waveSize = this.playing.getWaveManager().getWaves().get(this.playing.getWaveManager().getWaveIndex()).getEnemyList().size();
-        g.drawString("Enemies left: " + remaining + " / " + waveSize, 425, 690);
+        g.drawString("Enemies left: " + remaining + " / " + waveSize, X_TOWER_TILE_POSITION, BUTTON_Y_OFFSET + 690);
     }
 
     private void drawWaveTimerInfo(Graphics g){
-        if(this.playing.getWaveManager().isWaveTimerStarted()){
+//        if(this.playing.getWaveManager().isWaveTimerStarted()){
             float timeLeft = this.playing.getWaveManager().getTimeLeft();
             String formattedText = this.formatter.format(timeLeft);
 
-            g.drawString("Time left: " + formattedText, 425, 720);
-        }
+            g.drawString("Time left: " + formattedText, X_TOWER_TILE_POSITION, BUTTON_Y_OFFSET + 710);
+//        }
     }
 
     private void drawDisplayedTower(Graphics g) {
         if (displayedTower != null) {
             g.setColor(Color.GRAY);
-            g.fillRect(X_TOWER_TILE_POSITION - 10, Y_TOWER_TILE_POSITION - 10, DATA_TOWER_DISPLAY_SIZE * 3 + 20, DATA_TOWER_DISPLAY_SIZE * 2);
+            g.fillRect(X_TOWER_TILE_POSITION - 10, Y_TOWER_TILE_POSITION, DATA_TOWER_DISPLAY_SIZE * 5 + 20, DATA_TOWER_DISPLAY_SIZE * 2);
             g.drawImage(playing.getTowerManager().getTowerImgs()[displayedTower.getTowerType()],
                     X_TOWER_TILE_POSITION,
-                    Y_TOWER_TILE_POSITION,
-                    DATA_TOWER_DISPLAY_SIZE,
-                    DATA_TOWER_DISPLAY_SIZE,
+                    Y_TOWER_TILE_POSITION + 7,
+                    DATA_TOWER_DISPLAY_SIZE + 5,
+                    DATA_TOWER_DISPLAY_SIZE + 5,
                     null);
             g.setColor(Color.BLACK);
-            g.drawRect(X_TOWER_TILE_POSITION - 10, Y_TOWER_TILE_POSITION - 10, DATA_TOWER_DISPLAY_SIZE * 3 + 20, DATA_TOWER_DISPLAY_SIZE * 2);
-            g.drawRect(X_TOWER_TILE_POSITION, Y_TOWER_TILE_POSITION, DATA_TOWER_DISPLAY_SIZE, DATA_TOWER_DISPLAY_SIZE);
+            g.drawRect(X_TOWER_TILE_POSITION - 10, Y_TOWER_TILE_POSITION, DATA_TOWER_DISPLAY_SIZE * 5 + 20, DATA_TOWER_DISPLAY_SIZE * 2);
+            g.drawRect(X_TOWER_TILE_POSITION, Y_TOWER_TILE_POSITION + 7, DATA_TOWER_DISPLAY_SIZE + 5, DATA_TOWER_DISPLAY_SIZE + 5);
             g.setFont(new Font("LucidaSans", Font.BOLD, 15));
             g.drawString("NAME: " + ConstantsUtil.Towers.getName(displayedTower.getTowerType()), X_TOWER_NAME_POSITION, Y_TOWER_NAME_POSITION);
             g.drawString("ID: " + displayedTower.getId(), X_TOWER_NAME_POSITION, Y_TOWER_ID_POSITION);
@@ -146,8 +183,12 @@ public class ActionBar extends Bar {
         } else {
             for (MyButton b : towerButtons) {
                 if (b.getBounds().contains(x, y)) {
-                    selectedTower = new Tower(0, 0, b.getId(), b.getId());
-                    playing.setSelectedTower(selectedTower);
+                    if(this.isGoldEnoughForTower(b.getId())){
+                        selectedTower = new Tower(0, 0, b.getId(), b.getId());
+                        playing.setSelectedTower(selectedTower);
+                    }else{
+
+                    }
                     return;
                 }
             }
@@ -156,6 +197,7 @@ public class ActionBar extends Bar {
 
     public void mouseMoved(int x, int y) {
         bMenu.setMouseOver(false);
+        this.showTowerCost = false;
         for (MyButton b : towerButtons)
             b.setMouseOver(false);
 
@@ -165,6 +207,8 @@ public class ActionBar extends Bar {
             for (MyButton b : towerButtons)
                 if (b.getBounds().contains(x, y)) {
                     b.setMouseOver(true);
+                    this.showTowerCost = true;
+                    this.towerCostType = b.getId();
                     return;
                 }
         }
@@ -183,5 +227,17 @@ public class ActionBar extends Bar {
         bMenu.resetBooleans();
         for (MyButton b : towerButtons)
             b.resetBooleans();
+    }
+
+    public void payForTower(int towerCostType){
+        this.gold -= getCost(towerCostType);
+    }
+
+    private boolean isGoldEnoughForTower(int towerCostType) {
+        return this.gold >= getCost(towerCostType);
+    }
+
+    public void addGold(int reward) {
+        this.gold += reward;
     }
 }

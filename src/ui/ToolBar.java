@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static util.GlobalValuesUtil.*;
 import static main.GameStates.MENU;
 import static main.GameStates.setGameState;
 
@@ -22,15 +23,6 @@ public class ToolBar extends Bar {
     private BufferedImage pathStart, pathEnd;
     private Tile selectedTile;
 
-    private int buttonSize = GlobalValuesUtil.BUTTON_SQUARE_SIDE;
-    private int spriteSize = GlobalValuesUtil.SPRITE_SIZE;
-    private int xButtonPosition = GlobalValuesUtil.X_BUTTON_POSITION;
-    private int yButtonPosition = GlobalValuesUtil.Y_BUTTON_POSITION;
-    private int xButtonOffset = GlobalValuesUtil.BUTTON_X_OFFSET;
-    private int yButtonOffset = GlobalValuesUtil.BUTTON_Y_OFFSET;
-    private int initialXTilePosition = GlobalValuesUtil.INITIAL_X_TILE_POSITION;
-
-//    private ArrayList<MyButton> tileButtons = new ArrayList<>();
     private Map<MyButton, ArrayList<Tile>> map = new HashMap<>();
 
     private MyButton bGrass, bWater, bRoadStraight, bRoadCorner, bWaterCorner, bBeaches, bIsland;
@@ -45,27 +37,27 @@ public class ToolBar extends Bar {
     }
 
     private void initPathImgs() {
-        this.pathStart = LoadSave.getSpriteAtlas().getSubimage(spriteSize * 7, spriteSize * 2, spriteSize, spriteSize);
-        this.pathEnd = LoadSave.getSpriteAtlas().getSubimage(spriteSize * 8, spriteSize * 2, spriteSize, spriteSize);
+        this.pathStart = LoadSave.getSpriteAtlas().getSubimage(SPRITE_SIZE * 7, SPRITE_SIZE * 2, SPRITE_SIZE, SPRITE_SIZE);
+        this.pathEnd = LoadSave.getSpriteAtlas().getSubimage(SPRITE_SIZE * 8, SPRITE_SIZE * 2, SPRITE_SIZE, SPRITE_SIZE);
     }
 
     private void initButtons() {
         int i = 0;
 
-        this.bMenu = new MyButton("Menu", xButtonPosition, yButtonPosition, buttonSize, buttonSize);
-        this.bSave = new MyButton("Save", xButtonPosition + xButtonOffset, yButtonPosition, buttonSize, buttonSize);
+        this.bMenu = new MyButton("Menu", X_BUTTON_POSITION, Y_BUTTON_POSITION, BUTTON_SQUARE_SIDE, BUTTON_SQUARE_SIDE);
+        this.bSave = new MyButton("Save", X_BUTTON_POSITION + BUTTON_X_OFFSET, Y_BUTTON_POSITION, BUTTON_SQUARE_SIDE, BUTTON_SQUARE_SIDE);
 
-        this.bGrass = new MyButton("Grass", xButtonPosition + xButtonOffset * 2, yButtonPosition, buttonSize, buttonSize, i++);
-        this.bWater = new MyButton("Water", xButtonPosition + xButtonOffset * 3, yButtonPosition, buttonSize, buttonSize, i++);
+        this.bGrass = new MyButton("Grass", X_BUTTON_POSITION + BUTTON_X_OFFSET * 2, Y_BUTTON_POSITION, BUTTON_SQUARE_SIDE, BUTTON_SQUARE_SIDE, i++);
+        this.bWater = new MyButton("Water", X_BUTTON_POSITION + BUTTON_X_OFFSET * 3, Y_BUTTON_POSITION, BUTTON_SQUARE_SIDE, BUTTON_SQUARE_SIDE, i++);
 
-        this.initMapButton(bRoadStraight, editing.getGame().getTileManager().getRoadsStraight(), xButtonPosition + xButtonOffset, yButtonPosition, xButtonOffset, buttonSize, buttonSize, i++);
-        this.initMapButton(bRoadCorner, editing.getGame().getTileManager().getRoadsCorner(), xButtonPosition + xButtonOffset, yButtonPosition, xButtonOffset, buttonSize, buttonSize, i++);
-        this.initMapButton(bWaterCorner, editing.getGame().getTileManager().getWaterCorner(), xButtonPosition + xButtonOffset, yButtonPosition, xButtonOffset, buttonSize, buttonSize, i++);
-        this.initMapButton(bBeaches, editing.getGame().getTileManager().getBeaches(), xButtonPosition + xButtonOffset, yButtonPosition, xButtonOffset, buttonSize, buttonSize, i++);
-        this.initMapButton(bIsland, editing.getGame().getTileManager().getIslands(), xButtonPosition + xButtonOffset, yButtonPosition, xButtonOffset, buttonSize, buttonSize, i++);
+        this.initMapButton(bRoadStraight, editing.getGame().getTileManager().getRoadsStraight(), X_BUTTON_POSITION + BUTTON_X_OFFSET, Y_BUTTON_POSITION, BUTTON_X_OFFSET, BUTTON_SQUARE_SIDE, BUTTON_SQUARE_SIDE, i++);
+        this.initMapButton(bRoadCorner, editing.getGame().getTileManager().getRoadsCorner(), X_BUTTON_POSITION + BUTTON_X_OFFSET, Y_BUTTON_POSITION, BUTTON_X_OFFSET, BUTTON_SQUARE_SIDE, BUTTON_SQUARE_SIDE, i++);
+        this.initMapButton(bWaterCorner, editing.getGame().getTileManager().getWaterCorner(), X_BUTTON_POSITION + BUTTON_X_OFFSET, Y_BUTTON_POSITION, BUTTON_X_OFFSET, BUTTON_SQUARE_SIDE, BUTTON_SQUARE_SIDE, i++);
+        this.initMapButton(bBeaches, editing.getGame().getTileManager().getBeaches(), X_BUTTON_POSITION + BUTTON_X_OFFSET, Y_BUTTON_POSITION, BUTTON_X_OFFSET, BUTTON_SQUARE_SIDE, BUTTON_SQUARE_SIDE, i++);
+        this.initMapButton(bIsland, editing.getGame().getTileManager().getIslands(), X_BUTTON_POSITION + BUTTON_X_OFFSET, Y_BUTTON_POSITION, BUTTON_X_OFFSET, BUTTON_SQUARE_SIDE, BUTTON_SQUARE_SIDE, i++);
 
-        this.bPathStart = new MyButton("PathStart", xButtonPosition + xButtonOffset * 2, yButtonPosition + yButtonOffset, buttonSize, buttonSize, i++);
-        this.bPathEnd = new MyButton("PathEnd", xButtonPosition + xButtonOffset * 3, yButtonPosition + yButtonOffset, buttonSize, buttonSize, i++);
+        this.bPathStart = new MyButton("PathStart", X_BUTTON_POSITION + BUTTON_X_OFFSET * 2, Y_BUTTON_POSITION + BUTTON_Y_OFFSET, BUTTON_SQUARE_SIDE, BUTTON_SQUARE_SIDE, i++);
+        this.bPathEnd = new MyButton("PathEnd", X_BUTTON_POSITION + BUTTON_X_OFFSET * 3, Y_BUTTON_POSITION + BUTTON_Y_OFFSET, BUTTON_SQUARE_SIDE, BUTTON_SQUARE_SIDE, i++);
     }
 
     private void initMapButton(MyButton b, ArrayList<Tile> list, int x, int y, int xOff, int w, int h, int id){
@@ -133,9 +125,9 @@ public class ToolBar extends Bar {
 
     private void drawSelectedTile(Graphics g) {
         if(selectedTile != null){
-            g.drawImage(this.selectedTile.getSprite(), initialXTilePosition, yButtonPosition, buttonSize, buttonSize, null);
+            g.drawImage(this.selectedTile.getSprite(), INITIAL_X_TILE_POSITION, Y_BUTTON_POSITION, BUTTON_SQUARE_SIDE, BUTTON_SQUARE_SIDE, null);
             g.setColor(Color.BLACK);
-            g.drawRect(initialXTilePosition, yButtonPosition, buttonSize, buttonSize);
+            g.drawRect(INITIAL_X_TILE_POSITION, Y_BUTTON_POSITION, BUTTON_SQUARE_SIDE, BUTTON_SQUARE_SIDE);
         }
     }
 
