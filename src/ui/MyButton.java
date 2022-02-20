@@ -102,5 +102,6 @@ public class MyButton {
     }
 
     public int getId(){ return this.id; }
+    public void setText(String text){ this.text = text; }
 
 }

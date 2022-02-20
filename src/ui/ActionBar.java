@@ -16,7 +16,7 @@ import static util.ConstantsUtil.Towers.*;
 public class ActionBar extends Bar {
 
     private Playing playing;
-    private MyButton bMenu;
+    private MyButton bMenu, bPause;
 
     private MyButton[] towerButtons;
     private Tower selectedTower;
@@ -41,6 +41,9 @@ public class ActionBar extends Bar {
     private void initButtons() {
 
         this.bMenu = new MyButton("Menu", X_BUTTON_POSITION, Y_BUTTON_POSITION, BUTTON_SQUARE_SIDE, BUTTON_SQUARE_SIDE);
+        this.bPause = new MyButton("Pause", X_BUTTON_POSITION,
+                Y_BUTTON_POSITION + BUTTON_SQUARE_SIDE + 10,
+                BUTTON_SQUARE_SIDE, BUTTON_SQUARE_SIDE);
 
         this.towerButtons = new MyButton[TOWER_AMOUNT];
 
@@ -55,6 +58,7 @@ public class ActionBar extends Bar {
     private void drawButtons(Graphics g) {
         // menu button
         this.bMenu.draw(g);
+        this.bPause.draw(g);
 
         for (MyButton b : towerButtons) {
             int id = b.getId();
@@ -81,6 +85,13 @@ public class ActionBar extends Bar {
         // draw tower cost
         if(this.showTowerCost)
             this.drawTowerCost(g);
+        // game paused text
+        if(this.playing.isGamePaused()) {
+            g.setColor(Color.BLACK);
+            g.drawString("Game is paused!",
+                    X_BUTTON_POSITION + BUTTON_X_OFFSET,
+                    Y_BUTTON_POSITION + BUTTON_Y_OFFSET + g.getFontMetrics().getHeight() * 2);
+        }
     }
 
     private void drawTowerCost(Graphics g) {
@@ -214,6 +225,8 @@ public class ActionBar extends Bar {
         if (bMenu.getBounds().contains(x, y)) {
             bMenu.setMouseOver(false);
             setGameState(MENU);
+        } else if (bPause.getBounds().contains(x, y)) {
+            this.togglePause();
         } else {
             if(this.displayedTower != null){
                 if(this.bSellTower.getBounds().contains(x, y)){
@@ -239,19 +252,29 @@ public class ActionBar extends Bar {
         }
     }
 
+    private void togglePause() {
+        this.playing.togglePause();
+
+        if(this.playing.isGamePaused()) bPause.setText("Unpause");
+        else bPause.setText("Pause");
+    }
+
     public void mouseMoved(int x, int y) {
-        bMenu.setMouseOver(false);
+        this.bMenu.setMouseOver(false);
+        this.bPause.setMouseOver(false);
         this.showTowerCost = false;
-        bSellTower.setMouseOver(false);
-        bUpgradeTower.setMouseOver(false);
+        this.bSellTower.setMouseOver(false);
+        this.bUpgradeTower.setMouseOver(false);
         for (MyButton b : towerButtons)
             b.setMouseOver(false);
 
         this.bSellTower.setMouseOver(false);
         this.bSellTower.setMouseOver(false);
 
-        if (bMenu.getBounds().contains(x, y)) {
-            bMenu.setMouseOver(true);
+        if (this.bMenu.getBounds().contains(x, y)) {
+            this.bMenu.setMouseOver(true);
+        } else if (this.bPause.getBounds().contains(x, y)) {
+            this.bPause.setMouseOver(true);
         } else {
 
             if(this.displayedTower != null){
@@ -263,7 +286,7 @@ public class ActionBar extends Bar {
                     return;
                 }
             }
-            for (MyButton b : towerButtons)
+            for (MyButton b : this.towerButtons)
                 if (b.getBounds().contains(x, y)) {
                     b.setMouseOver(true);
                     this.showTowerCost = true;
@@ -274,9 +297,11 @@ public class ActionBar extends Bar {
     }
 
     public void mousePressed(int x, int y) {
-        if (bMenu.getBounds().contains(x, y))
-            bMenu.setMousePressed(true);
-        else {
+        if (this.bMenu.getBounds().contains(x, y))
+            this.bMenu.setMousePressed(true);
+        else if (this.bPause.getBounds().contains(x, y))
+            this.bPause.setMousePressed(true);
+        else{
 
             if(this.displayedTower != null){
                 if(this.bSellTower.getBounds().contains(x, y)){
@@ -287,17 +312,18 @@ public class ActionBar extends Bar {
                     return;
                 }
             }
-            for (MyButton b : towerButtons)
+            for (MyButton b : this.towerButtons)
                 if (b.getBounds().contains(x, y))
                     b.setMousePressed(true);
         }
     }
 
     public void mouseReleased(int x, int y) {
-        bMenu.resetBooleans();
-        bSellTower.resetBooleans();
-        bUpgradeTower.resetBooleans();
-        for (MyButton b : towerButtons)
+        this.bMenu.resetBooleans();
+        this.bPause.resetBooleans();
+        this.bSellTower.resetBooleans();
+        this.bUpgradeTower.resetBooleans();
+        for (MyButton b : this.towerButtons)
             b.resetBooleans();
     }
 

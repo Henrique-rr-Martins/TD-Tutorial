@@ -27,6 +27,7 @@ public class Playing extends GameScene implements SceneMethods{
     private Tower selectedTower;
 
     private int goldTick;
+    private boolean gamePaused;
 
     public Playing(Game game) {
         super(game);
@@ -48,32 +49,34 @@ public class Playing extends GameScene implements SceneMethods{
     }
 
     public void update(){
-        this.updateTick();
-        this.waveManager.update();
+        if(!this.gamePaused) {
+            this.updateTick();
+            this.waveManager.update();
 
-        // gold tick
-        this.goldTick++;
-        if(this.goldTick % (60 * 3) == 0)
-            this.rewardPlayer(1);
+            // gold tick
+            this.goldTick++;
+            if (this.goldTick % (60 * 3) == 0)
+                this.rewardPlayer(1);
 
-        if(!this.waveManager.isThereMoreEnemiesInWave() && this.isAllEnemiesDead()){
-            if(this.isThereMoreWaves()){
-                this.waveManager.startWaveTimer();
-                if(this.isWaveTimerOver()) {
-                    this.waveManager.increaseWaveIndex();
-                    this.enemyManager.getEnemies().clear();
-                    this.waveManager.resetEnemyIndex();
+            if (!this.waveManager.isThereMoreEnemiesInWave() && this.isAllEnemiesDead()) {
+                if (this.isThereMoreWaves()) {
+                    this.waveManager.startWaveTimer();
+                    if (this.isWaveTimerOver()) {
+                        this.waveManager.increaseWaveIndex();
+                        this.enemyManager.getEnemies().clear();
+                        this.waveManager.resetEnemyIndex();
+                    }
                 }
             }
-        }
 
-        if(this.isTimeForNewEnemy()){
-            this.spawnEnemy();
-        }
+            if (this.isTimeForNewEnemy()) {
+                this.spawnEnemy();
+            }
 
-        this.enemyManager.update();
-        this.towerManager.update();
-        this.projectileManager.update();
+            this.enemyManager.update();
+            this.towerManager.update();
+            this.projectileManager.update();
+        }
     }
 
     private boolean isAllEnemiesDead() {
@@ -191,11 +194,9 @@ public class Playing extends GameScene implements SceneMethods{
     private Tower getTowerAt(int x, int y) { return towerManager.getTowerAt(mouseX, mouseY); }
     public EnemyManager getEnemyManager(){ return this.enemyManager; }
     public WaveManager getWaveManager(){ return this.waveManager; }
-    private boolean isTimeForNewEnemy() {
-        return this.waveManager.isTimeForNewEnemy() && this.waveManager.isThereMoreEnemiesInWave();
-    }
+    private boolean isTimeForNewEnemy() { return this.waveManager.isTimeForNewEnemy() && this.waveManager.isThereMoreEnemiesInWave(); }
     private boolean isThereMoreWaves() { return this.waveManager.isThereMoreWaves(); }
-    private boolean isWaveTimerOver() {
-        return this.waveManager.isWaveTimerOver();
-    }
+    private boolean isWaveTimerOver() { return this.waveManager.isWaveTimerOver(); }
+    public void togglePause() { this.gamePaused = !gamePaused; }
+    public boolean isGamePaused() { return this.gamePaused; }
 }
