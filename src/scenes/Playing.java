@@ -150,6 +150,10 @@ public class Playing extends GameScene implements SceneMethods{
         this.actionBar.payForTower(towerType);
     }
 
+    public void sellTower(Tower displayedTower) {
+        this.towerManager.removeTower(displayedTower);
+    }
+
     @Override
     public void mouseMoved(int x, int y) {
         if(y >= 640){

@@ -38,7 +38,7 @@ public class GlobalValuesUtil {
     public static final int Y_TOWER_TILE_POSITION = 640 + (100 - BUTTON_SQUARE_SIDE) / 2 - 15;
     public static final int X_TOWER_NAME_POSITION = X_TOWER_TILE_POSITION  + DATA_TOWER_DISPLAY_SIZE + 10;
     public static final int Y_TOWER_NAME_POSITION = Y_TOWER_TILE_POSITION + 20;
-    public static final int Y_TOWER_ID_POSITION = Y_TOWER_NAME_POSITION + 15;
+    public static final int Y_TOWER_ID_POSITION = Y_TOWER_NAME_POSITION + 10;
 
     // animations
     public static final int TILE_ANIMATION_SPEED = 20;
