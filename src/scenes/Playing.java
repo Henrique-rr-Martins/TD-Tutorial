@@ -14,6 +14,7 @@ import java.awt.event.KeyEvent;
 
 import static util.ConstantsUtil.Tiles.GRASS_TILE;
 import static util.GlobalValuesUtil.*;
+import static main.GameStates.*;
 
 public class Playing extends GameScene implements SceneMethods{
     private ActionBar actionBar;
@@ -199,4 +200,6 @@ public class Playing extends GameScene implements SceneMethods{
     private boolean isWaveTimerOver() { return this.waveManager.isWaveTimerOver(); }
     public void togglePause() { this.gamePaused = !gamePaused; }
     public boolean isGamePaused() { return this.gamePaused; }
+    public void removeLife() { this.actionBar.removeLife(); }
+    public void setGameStateToGameOver(){ setGameState(GAME_OVER); }
 }

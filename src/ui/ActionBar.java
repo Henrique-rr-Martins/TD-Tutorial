@@ -29,9 +29,13 @@ public class ActionBar extends Bar {
     private boolean showTowerCost;
     private int towerCostType;
 
+    private int totalLives, lives;
+
     public ActionBar(int x, int y, int width, int height, Playing playing) {
         super(x, y, width, height);
         this.playing = playing;
+
+        this.totalLives = lives = 25;
 
         this.formatter = new DecimalFormat("0.0");
 
@@ -92,6 +96,20 @@ public class ActionBar extends Bar {
                     X_BUTTON_POSITION + BUTTON_X_OFFSET,
                     Y_BUTTON_POSITION + BUTTON_Y_OFFSET + g.getFontMetrics().getHeight() * 2);
         }
+
+        // lives
+        this.drawLives(g);
+    }
+
+    private void drawLives(Graphics g) {
+        if(this.lives >= totalLives * 0.75)
+            g.setColor(Color.GREEN);
+        else if(this.lives >= totalLives * 0.35)
+            g.setColor(Color.YELLOW);
+        else
+            g.setColor(Color.RED);
+
+        g.drawString("Lives: " + this.lives, X_BUTTON_POSITION + BUTTON_X_OFFSET, Y_BUTTON_POSITION + BUTTON_Y_OFFSET + g.getFontMetrics().getHeight());
     }
 
     private void drawTowerCost(Graphics g) {
@@ -117,7 +135,8 @@ public class ActionBar extends Bar {
 
     private void drawGoldAmount(Graphics g) {
         var fontMetrics = g.getFontMetrics();
-        g.drawString("gold: " + this.gold, X_BUTTON_POSITION + BUTTON_X_OFFSET, Y_BUTTON_POSITION + BUTTON_Y_OFFSET + fontMetrics.getHeight());
+        g.setColor(Color.LIGHT_GRAY);
+        g.drawString("gold: " + this.gold, X_BUTTON_POSITION + BUTTON_X_OFFSET + g.getFontMetrics().stringWidth("Lives: " + this.lives) + 10, Y_BUTTON_POSITION + BUTTON_Y_OFFSET + fontMetrics.getHeight());
     }
 
     private void drawWaveInfo(Graphics g) {
@@ -217,7 +236,7 @@ public class ActionBar extends Bar {
     private void upgradeTowerClicked() {
         if(this.gold >= this.getUpgradeAmount(this.displayedTower)) {
             this.displayedTower.upgradeTower();
-            gold -= this.getUpgradeAmount(this.displayedTower);
+            this.gold -= this.getUpgradeAmount(this.displayedTower);
         }
     }
 
@@ -345,5 +364,12 @@ public class ActionBar extends Bar {
         upgradeCost *= 0.5f;
 
         return getCost(displayedTower.getTowerType()) / 2 + upgradeCost;
+    }
+    public void removeLife(){
+        this.lives--;
+        if(this.lives <= 0) {
+            this.playing.getGame().resetPlayingClass();
+            this.playing.setGameStateToGameOver();
+        }
     }
 }

@@ -12,19 +12,11 @@ public class Render implements ImgEntitiesInterface{
 
     public void render(Graphics g){
         switch (GameStates.gameState){
-            case MENU:
-                this.game.getMenu().render(g);
-                break;
-            case PLAYING:
-                this.game.getPlaying().render(g);
-                break;
-            case SETTINGS:
-                this.game.getSettings().render(g);
-                break;
-            case EDIT:
-                this.game.getEditor().render(g);
-                break;
-            default:
+            case MENU -> { this.game.getMenu().render(g); }
+            case PLAYING -> { this.game.getPlaying().render(g); }
+            case SETTINGS -> { this.game.getSettings().render(g); }
+            case EDIT -> { this.game.getEditor().render(g); }
+            case GAME_OVER -> { this.game.getGameOver().render(g); }
         }
     }
 }

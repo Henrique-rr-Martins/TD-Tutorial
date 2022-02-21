@@ -4,6 +4,7 @@ import enemies.Enemy;
 import objects.Projectile;
 import objects.Tower;
 import scenes.Playing;
+import util.ConstantsUtil;
 import util.LoadSave;
 
 import java.awt.*;
@@ -98,6 +99,9 @@ public class ProjectileManager {
                         this.explosions.add(new Explosion(p.getPos()));
                         this.explodeOnEnemies(p);
                     }
+                } else if(this.isProjectileOutsideBounds(p)){
+                    System.out.println("Disapear");
+                    p.setActive(false);
                 }
             } else
                 this.projectilesToDestroy.add(p);
@@ -146,6 +150,11 @@ public class ProjectileManager {
         }
 
         return false;
+    }
+
+    private boolean isProjectileOutsideBounds(Projectile p) {
+        return !(p.getPos().x >= 0 && p.getPos().x <= 800 &&
+                p.getPos().y >= 0 && p.getPos().y <= 800);
     }
 
     public void draw(Graphics g) {

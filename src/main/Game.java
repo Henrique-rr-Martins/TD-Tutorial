@@ -4,10 +4,7 @@ import inputs.KeyboardListener;
 import inputs.MyMouseListener;
 import managers.TileManager;
 import objects.Tile;
-import scenes.Editing;
-import scenes.Menu;
-import scenes.Playing;
-import scenes.Settings;
+import scenes.*;
 import util.LoadSave;
 
 import javax.swing.*;
@@ -30,6 +27,7 @@ public class Game extends JFrame implements Runnable{
     private Playing playing;
     private Settings settings;
     private Editing editing;
+    private GameOver gameOver;
     // END - Classes to render
 
 
@@ -77,6 +75,7 @@ public class Game extends JFrame implements Runnable{
         this.playing = new Playing(this);
         this.settings = new Settings(this);
         this.editing = new Editing(this);
+        this.gameOver = new GameOver(this);
     }
 
     private void updateGame(){
@@ -136,5 +135,7 @@ public class Game extends JFrame implements Runnable{
     public Playing getPlaying() { return playing; }
     public Settings getSettings() { return settings; }
     public Editing getEditor() { return editing; }
+    public GameOver getGameOver(){ return this.gameOver; }
     public TileManager getTileManager(){ return this.tileManager; }
+    public void resetPlayingClass(){ this.playing = new Playing(this); }
 }

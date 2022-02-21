@@ -68,6 +68,7 @@ public class EnemyManager {
         } else if (this.isAtEnd(e)) {
             // reached the end
             e.kill();
+            this.playing.removeLife();
         } else {
             // find new direction
             this.setNewDirectionAndMove(e, speed);
