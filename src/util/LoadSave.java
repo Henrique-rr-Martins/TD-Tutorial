@@ -11,6 +11,15 @@ import java.util.Scanner;
 import static util.StringUtil.*;
 
 public class LoadSave {
+
+    public static File lvlFile = new File(FILE_PATH);
+
+    public static void createFolder(){
+        File folder = new File(FOLDER_PATH);
+        if(!folder.exists())
+            folder.mkdir();
+    }
+
     public static BufferedImage getSpriteAtlas(){
         BufferedImage img = null;
         InputStream is = LoadSave.class.getClassLoader().getResourceAsStream(SPRITE_ATLAS);
@@ -24,18 +33,16 @@ public class LoadSave {
         return img;
     }
 
-    public static void createLevel(String name, int[] idArr){
-        var filePath = String.format(StringUtil.DEFAULT_PATH, name);
-        File newLevel = new File(filePath);
+    public static void createLevel(int[] idArr){
 
-        if(newLevel.exists()){
-            System.out.println(String.format(TXT_FILE_ALREADY_EXISTS, filePath));
+        if(lvlFile.exists()){
+            System.out.println(String.format(TXT_FILE_ALREADY_EXISTS, FILE_PATH));
             return;
         }
 
         try {
-            newLevel.createNewFile();
-            writeToFile(newLevel, idArr, new PathPoint(0, 0), new PathPoint(0, 0));
+            lvlFile.createNewFile();
+            writeToFile(lvlFile, idArr, new PathPoint(0, 0), new PathPoint(0, 0));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -55,16 +62,14 @@ public class LoadSave {
         }
     }
 
-    public static void saveLevel(String name, int[][] idArr, PathPoint start, PathPoint end){
-        var filePath = String.format(StringUtil.DEFAULT_PATH, name);
-        File newLevel = new File(filePath);
+    public static void saveLevel(int[][] idArr, PathPoint start, PathPoint end){
 
-        if(!newLevel.exists()){
+        if(!lvlFile.exists()){
             System.out.println(TXT_FILE_DOES_NOT_EXIST);
             return;
         }
 
-        writeToFile(newLevel, ArrayUtil.transformFrom2DintTo1DIntArr(idArr), start, end);
+        writeToFile(lvlFile, ArrayUtil.transformFrom2DintTo1DIntArr(idArr), start, end);
     }
 
     public static ArrayList<Integer> readFromFile(File lvlFile){
@@ -81,9 +86,7 @@ public class LoadSave {
         return list;
     }
 
-    public static ArrayList<PathPoint> getLevelPathPoints(String name){
-        var filePath = String.format(StringUtil.DEFAULT_PATH, name);
-        File lvlFile = new File(filePath);
+    public static ArrayList<PathPoint> getLevelPathPoints(){
 
         if(!lvlFile.exists()){
             System.out.println(TXT_FILE_DOES_NOT_EXIST);
@@ -100,9 +103,7 @@ public class LoadSave {
         return points;
     }
 
-    public static int[][] getLevelData(String name){
-        var filePath = String.format(StringUtil.DEFAULT_PATH, name);
-        File lvlFile = new File(filePath);
+    public static int[][] getLevelData(){
 
         if(!lvlFile.exists()){
             System.out.println(TXT_FILE_DOES_NOT_EXIST);
@@ -111,6 +112,6 @@ public class LoadSave {
 
         ArrayList<Integer> list = readFromFile(lvlFile);
 
-        return ArrayUtil.transformFromArrayListTo2Dint(list, 20, 20);
-    }
+		return ArrayUtil.transformFromArrayListTo2Dint(list, 20, 20);
+	}
 }

@@ -35,7 +35,7 @@ public class ActionBar extends Bar {
         super(x, y, width, height);
         this.playing = playing;
 
-        this.totalLives = lives = 3;
+        this.totalLives = lives = 25;
 
         this.formatter = new DecimalFormat("0.0");
 

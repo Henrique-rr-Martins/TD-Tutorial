@@ -29,6 +29,7 @@ public class Playing extends GameScene implements SceneMethods{
 
     private int goldTick;
     private boolean gamePaused;
+    private String fpsAndUps;
 
     public Playing(Game game) {
         super(game);
@@ -97,9 +98,17 @@ public class Playing extends GameScene implements SceneMethods{
 
         this.drawSelectedTower(g);
         this.drawHighlight(g);
+        
+        // fps and ups
+    	this.drawFpsAndUps(g);
     }
 
-    private void drawHighlight(Graphics g) {
+    private void drawFpsAndUps(Graphics g) {
+    	g.setColor(Color.PINK);
+		g.drawString(this.fpsAndUps, PANEL_WIDTH - g.getFontMetrics().stringWidth(this.fpsAndUps) - 10, g.getFontMetrics().getHeight());		
+	}
+
+	private void drawHighlight(Graphics g) {
         g.setColor(Color.PINK);
         g.drawRect(mouseX, mouseY, DEFAULT_MAP_TILE_SIZE, DEFAULT_MAP_TILE_SIZE);
     }
@@ -202,4 +211,5 @@ public class Playing extends GameScene implements SceneMethods{
     public boolean isGamePaused() { return this.gamePaused; }
     public void removeLife() { this.actionBar.removeLife(); }
     public void setGameStateToGameOver(){ setGameState(GAME_OVER); }
+    public void setFpsAndUps(String fpsAndUps) { this.fpsAndUps = fpsAndUps; }
 }

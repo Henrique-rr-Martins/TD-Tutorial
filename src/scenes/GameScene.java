@@ -29,8 +29,8 @@ public class GameScene {
     }
 
     private void loadDefaultLevel() {
-        lvl = LoadSave.getLevelData(LEVEL_NAME);
-        ArrayList<PathPoint> points = LoadSave.getLevelPathPoints(LEVEL_NAME);
+        lvl = LoadSave.getLevelData();
+        ArrayList<PathPoint> points = LoadSave.getLevelPathPoints();
         start = points.get(0);
         end = points.get(1);
     }

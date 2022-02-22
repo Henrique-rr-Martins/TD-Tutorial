@@ -49,8 +49,11 @@ public class KeyboardListener implements KeyListener {
 
     private void keyPressedInPlayingState(KeyEvent e){
         switch (e.getKeyCode()) {
-            case KeyEvent.VK_BACK_SPACE -> gameState = SETTINGS;
-            default -> game.getPlaying().keyPressed(e);
+            case KeyEvent.VK_BACK_SPACE:
+            	gameState = SETTINGS;
+            	break;
+            default:
+            	game.getPlaying().keyPressed(e);
         }
     }
 
@@ -64,7 +67,8 @@ public class KeyboardListener implements KeyListener {
 
     private void keyPressedInSettingsState(KeyEvent e){
         switch (e.getKeyCode()){
-            case KeyEvent.VK_BACK_SPACE -> gameState = PLAYING;
+            case KeyEvent.VK_BACK_SPACE:
+            	gameState = PLAYING;
         }
     }
 }

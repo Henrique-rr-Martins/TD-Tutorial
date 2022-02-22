@@ -8,12 +8,12 @@ public class ConstantsUtil {
         public static final int BOMB = 2;
 
         public static float getSpeed(int projectileType){
-            return switch(projectileType){
-                case ARROW -> 8f;
-                case BOMB -> 4f;
-                case CHAINS -> 6f;
-                default -> 0f;
-            };
+             switch(projectileType){
+                case ARROW: return 8f;
+                case BOMB: return 4f;
+                case CHAINS: return 6f;
+                default: return 0f;
+            }
         }
     }
 
@@ -39,31 +39,31 @@ public class ConstantsUtil {
         public static final int WOLF = 3;
 
         public static int getReward(int enemyType){
-            return switch (enemyType) {
-                case ORC -> 5;
-                case BAT -> 5;
-                case KNIGHT -> 25;
-                case WOLF -> 10;
-                default -> 0;
-            };
+             switch (enemyType) {
+                case ORC: return 5;
+                case BAT: return 5;
+                case KNIGHT: return 25;
+                case WOLF: return 10;
+                default: return 0;
+            }
         }
 
         public static float getSpeed(int enemyType) {
-            return switch (enemyType) {
-                case BAT -> 0.65f;
-                case KNIGHT -> 0.3f;
-                case WOLF -> 0.75f;
-                default -> 0.5f;
-            };
+             switch (enemyType) {
+                case BAT: return 0.65f;
+                case KNIGHT: return 0.3f;
+                case WOLF: return 0.75f;
+                default: return 0.5f;
+            }
         }
 
         public static int getStartHealth(int enemyType) {
-            return switch (enemyType){
-                case BAT -> 60;
-                case KNIGHT -> 250;
-                case WOLF -> 85;
-                default -> 100;
-            };
+             switch (enemyType){
+                case BAT: return 60;
+                case KNIGHT: return 250;
+                case WOLF: return 85;
+                default: return 100;
+            }
         }
     }
 
@@ -73,48 +73,48 @@ public class ConstantsUtil {
         public static final int WIZARD = 2;
 
         public static String getName(int towerType) {
-            return switch (towerType) {
-                case CANNON -> "CANNON";
-                case ARCHER -> "ARCHER";
-                case WIZARD -> "WIZARD";
-                default -> "";
-            };
+             switch (towerType) {
+                case CANNON: return "CANNON";
+                case ARCHER: return "ARCHER";
+                case WIZARD: return "WIZARD";
+                default: return "";
+            }
         }
 
         public static int getCost(int towerType){
-            return switch (towerType){
-                case CANNON -> 65;
-                case ARCHER -> 30;
-                case WIZARD -> 45;
-                default -> 0;
-            };
+             switch (towerType){
+                case CANNON: return 65;
+                case ARCHER: return 30;
+                case WIZARD: return 45;
+                default: return 0;
+            }
         }
 
         public static float getDefaultCooldown(int towerType){
-            return switch(towerType){
-                case CANNON -> 120;
-                case ARCHER -> 25;
-                case WIZARD -> 40;
-                default -> 1f;
-            };
+             switch(towerType){
+                case CANNON: return 120;
+                case ARCHER: return 25;
+                case WIZARD: return 40;
+                default: return 1f;
+            }
         }
 
         public static float getDefaultRange(int towerType){
-            return switch(towerType){
-                case CANNON -> 100;
-                case ARCHER -> 100;
-                case WIZARD -> 100;
-                default -> 1f;
-            };
+             switch(towerType){
+                case CANNON: return 100;
+                case ARCHER: return 100;
+                case WIZARD: return 100;
+                default: return 1f;
+            }
         }
 
         public static int getStartDamage(int towerType){
-            return switch(towerType){
-                case CANNON -> 15;
-                case ARCHER -> 5;
-                case WIZARD -> 0;
-                default -> 1;
-            };
+             switch(towerType){
+                case CANNON: return 15;
+                case ARCHER: return 5;
+                case WIZARD: return 0;
+                default: return 1;
+            }
         }
     }
 }

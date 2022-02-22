@@ -100,7 +100,7 @@ public class TileManager {
      * @return typeArray with any tile type
      */
     public int[][] getTypeArray(){
-        int[][] idArray = LoadSave.getLevelData(LEVEL_NAME);
+        int[][] idArray = LoadSave.getLevelData();
         int[][] typeArr = new int[idArray.length][idArray[0].length];
 
         for(int y = 0; y < idArray.length; y++)
