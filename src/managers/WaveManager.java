@@ -55,6 +55,8 @@ public class WaveManager {
     private void createWaves() {
         this.waves.add(new Wave(new ArrayList<Integer>(Arrays.asList(ORC, ORC, ORC, ORC, ORC, ORC, ORC, ORC, ORC, BAT))));
         this.waves.add(new Wave(new ArrayList<Integer>(Arrays.asList(KNIGHT, ORC, ORC, ORC, ORC, ORC, ORC, ORC, ORC, BAT))));
+        this.waves.add(new Wave(new ArrayList<Integer>(Arrays.asList(KNIGHT, BAT, BAT, BAT, BAT, BAT, BAT, BAT, BAT, ORC, ORC, ORC, ORC, KNIGHT, ORC, ORC, ORC, BAT, KNIGHT, ORC, ORC, KNIGHT, KNIGHT, KNIGHT, ORC, ORC, ORC, BAT, KNIGHT, BAT, BAT, BAT, BAT, BAT, BAT, BAT, BAT, ORC, ORC, ORC, ORC, KNIGHT, ORC, ORC, ORC, BAT, KNIGHT, ORC, ORC, KNIGHT, KNIGHT, KNIGHT, ORC, ORC, ORC, BAT))));
+        this.waves.add(new Wave(new ArrayList<Integer>(Arrays.asList(KNIGHT, BAT, BAT, BAT, BAT, BAT, BAT, BAT, BAT, ORC, ORC, ORC, ORC, KNIGHT, ORC, ORC, ORC, BAT, KNIGHT, ORC, ORC, KNIGHT, KNIGHT, KNIGHT, ORC, ORC, ORC, BAT, KNIGHT, BAT, BAT, BAT, BAT, BAT, BAT, BAT, BAT, ORC, ORC, ORC, ORC, KNIGHT, ORC, ORC, ORC, BAT, KNIGHT, ORC, ORC, KNIGHT, KNIGHT, KNIGHT, ORC, ORC, ORC, BAT))));
     }
 
     public ArrayList<Wave> getWaves() {

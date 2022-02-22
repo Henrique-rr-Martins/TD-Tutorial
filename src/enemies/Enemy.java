@@ -82,6 +82,14 @@ public abstract class Enemy {
         }
     }
 
+    /**
+     * To kill the enemy when it reaches the end.
+     */
+    public void kill(){
+        this.alive = false;
+        this.health = 0;
+    }
+
     public float getX() { return x; }
     public float getY() { return y; }
     public Rectangle getBounds() { return bounds; }
@@ -91,12 +99,5 @@ public abstract class Enemy {
     public int getLastDir(){ return this.lastDir; }
     public boolean isAlive(){ return this.alive; }
     public boolean isSlowed(){ return this.slowTick < this.slowTickLimit; }
-
-    /**
-     * To kill the enemy when it reaches the end.
-     */
-    public void kill(){
-        this.alive = false;
-        this.health = 0;
-    }
+    public void setLastDir(int newDir) { this.lastDir = newDir; };
 }

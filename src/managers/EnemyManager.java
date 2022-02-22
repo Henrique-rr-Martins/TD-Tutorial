@@ -1,15 +1,17 @@
 package managers;
 
 import enemies.*;
+import objects.PathPoint;
 import scenes.Playing;
+import util.ArrayUtil;
 import util.LoadSave;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static util.ConstantsUtil.Direction.*;
-import static util.ConstantsUtil.Tiles.ROAD_TILE;
 import static util.ConstantsUtil.Enemies.*;
 import static util.GlobalValuesUtil.*;
 
@@ -17,17 +19,33 @@ public class EnemyManager {
     private final Playing playing;
     private final BufferedImage[] enemyImgs;
     private final ArrayList<Enemy> enemies = new ArrayList<>();
+    private PathPoint start, end;
     private final int hpBarWidth = SPRITE_SIZE;
     private BufferedImage slowEffectImage;
+    private int[][] roadDirArray;
 
     private final int tileSize = DEFAULT_MAP_TILE_SIZE;
     private final int spriteSize = SPRITE_SIZE;
 
-    public EnemyManager(Playing playing) {
+    public EnemyManager(Playing playing, PathPoint start, PathPoint end) {
         this.playing = playing;
         this.enemyImgs = new BufferedImage[ENEMY_IMAGES_AMOUNT];
+        this.start = start;
+        this.end = end;
         this.loadEffectImg();
         this.loadEnemyImgs();
+        this.loadRoadDirArray();
+
+//        this.tempMethod();
+    }
+
+    private void loadRoadDirArray() {
+        this.roadDirArray = ArrayUtil.getRoadDirArray(this.playing.getGame().getTileManager().getTypeArray(), start, end);
+    }
+
+    private void tempMethod() {
+        for(int y = 0; y < this.roadDirArray.length; y++)
+            System.out.println(Arrays.toString(this.roadDirArray[y]));
     }
 
     private void loadEffectImg() {
@@ -44,101 +62,53 @@ public class EnemyManager {
     public void update() {
 
         for (Enemy e : enemies)
-            if (e.isAlive())
-                this.updateEnemyMove(e, getSpeed(e.getEnemyType()));
+            if (e.isAlive()) {
+//                this.updateEnemyMove(e, getSpeed(e.getEnemyType()));
+                this.updateEnemyMoveNew(e);
+            }
     }
 
-    private boolean isAtEnd(Enemy e) {
-        return e.getX() == this.playing.getEndPathPoint().getXCord() * tileSize &&
-                e.getY() == this.playing.getEndPathPoint().getYCord() * tileSize;
-    }
+    private void updateEnemyMoveNew(Enemy e) {
+        PathPoint currTile = this.getEnemyTile(e);
+        int dir = this.roadDirArray[currTile.getYCord()][currTile.getXCord()];
 
-    private void updateEnemyMove(Enemy e, float speed) {
-        int lastDir = e.getLastDir();
+        e.move(getSpeed(e.getEnemyType()), dir);
 
-        if (lastDir == -1)
-            this.setNewDirectionAndMove(e, speed);
+        PathPoint newTile = this.getEnemyTile(e);
 
-        int newX = (int) (e.getX() + this.getSpeedAndWidth(speed, lastDir));
-        int newY = (int) (e.getY() + this.getSpeedAndHeight(speed, lastDir));
-
-        if (this.getTileType(newX, newY) == ROAD_TILE) {
-            // keep moving in same direction
-            e.move(speed, e.getLastDir());
-        } else if (this.isAtEnd(e)) {
-            // reached the end
+        // reached the end
+        if(this.isTilesTheSame(newTile, end)){
             e.kill();
             this.playing.removeLife();
-        } else {
-            // find new direction
-            this.setNewDirectionAndMove(e, speed);
+        }
+
+        if(!this.isTilesTheSame(currTile, newTile)){
+            int newDir = this.roadDirArray[newTile.getYCord()][newTile.getXCord()];
+
+            if(newDir != dir){
+                e.setPos(newTile.getXCord() * DEFAULT_MAP_TILE_SIZE, newTile.getYCord() * DEFAULT_MAP_TILE_SIZE);
+                e.setLastDir(newDir);
+            }
         }
     }
 
-    private void setNewDirectionAndMove(Enemy e, float speed) {
-        int dir = e.getLastDir();
-
-        // move into the current until 100%;
-        int xCord = (int) (e.getX() / spriteSize);
-        int yCord = (int) (e.getY() / spriteSize);
-
-        this.fixEnemyOffSetTile(e, dir, xCord, yCord);
-
-        if (isAtEnd(e))
-            return;
-
-        if (dir == LEFT || dir == RIGHT) {
-            int newY = (int) (e.getY() + this.getSpeedAndHeight(speed, UP));
-            if (this.getTileType((int) e.getX(), newY) == ROAD_TILE)
-                e.move(speed, UP);
-            else
-                e.move(speed, DOWN);
-        } else {
-            int newX = (int) (e.getX() + this.getSpeedAndWidth(speed, RIGHT));
-            if (this.getTileType(newX, (int) e.getY()) == ROAD_TILE)
-                e.move(speed, RIGHT);
-            else
-                e.move(speed, LEFT);
+    /**
+     * Obs.: you check the (x, y) position which is top left. To avoid problems with that in code you need to add 32 to
+     * check the right position of others directions.
+     *
+     * @param e
+     * @return
+     */
+    private PathPoint getEnemyTile(Enemy e) {
+        switch (e.getLastDir()){
+            case LEFT -> { return new PathPoint((int) ((e.getX() + DEFAULT_MAP_TILE_SIZE-1) / DEFAULT_MAP_TILE_SIZE),  (int) (e.getY() / DEFAULT_MAP_TILE_SIZE)); }
+            case UP -> { return new PathPoint((int) (e.getX() / DEFAULT_MAP_TILE_SIZE), (int) ((e.getY() + DEFAULT_MAP_TILE_SIZE-1) / DEFAULT_MAP_TILE_SIZE)); }
+            default -> { return new PathPoint((int) (e.getX() / DEFAULT_MAP_TILE_SIZE),  (int) (e.getY() / DEFAULT_MAP_TILE_SIZE)); }
         }
     }
 
-    private void fixEnemyOffSetTile(Enemy e, int dir, int xCord, int yCord) {
-        switch (dir) {
-            case RIGHT:
-                // there are 20 tiles, but as array we need to subtract 1 to work with max_tile = 19
-                if (xCord < SCREEN_WIDTH / spriteSize - 1)
-                    xCord++;
-                break;
-            case DOWN:
-                // there are 20 tiles, but as array we need to subtract 1 to work with max_tile = 19
-                if (yCord < SCREEN_HEIGHT / spriteSize - 1)
-                    yCord++;
-                break;
-        }
-
-        e.setPos(xCord * spriteSize, yCord * spriteSize);
-    }
-
-    private int getTileType(int x, int y) {
-        return playing.getTileType(x, y);
-    }
-
-    private float getSpeedAndHeight(float speed, int dir) {
-        if (dir == UP)
-            return -speed;
-        else if (dir == DOWN)
-            return speed + spriteSize;
-
-        return 0;
-    }
-
-    private float getSpeedAndWidth(float speed, int dir) {
-        if (dir == LEFT)
-            return -speed;
-        else if (dir == RIGHT)
-            return speed + spriteSize;
-
-        return 0;
+    private boolean isTilesTheSame(PathPoint currTile, PathPoint newTile) {
+        return currTile.getYCord() == newTile.getYCord() && currTile.getXCord() == newTile.getXCord();
     }
 
     public void spawnEnemy(int nextEnemy) {

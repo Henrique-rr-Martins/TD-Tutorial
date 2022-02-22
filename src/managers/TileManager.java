@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import static util.ConstantsUtil.Tiles.*;
 import static util.ConstantsUtil.Tiles.WATER_TILE;
+import static util.StringUtil.*;
 
 public class TileManager {
     public Tile GRASS, WATER, ROAD_LR, ROAD_TB, ROAD_B_TO_R, ROAD_L_TO_B, ROAD_L_TO_T, ROAD_T_TO_R, BL_WATER_CORNER,
@@ -92,9 +93,25 @@ public class TileManager {
         int size = GlobalValuesUtil.SPRITE_SIZE;
         return atlas.getSubimage(xCord * size, yCord * size, size, size);
     }
-    public boolean isSpriteAnimation(int spriteId){
-        return tiles.get(spriteId).isSpriteAnimation();
+
+    /**
+     *Uses the map array to figure out each tile type, so we can work on ROAD_TILE type
+     *
+     * @return typeArray with any tile type
+     */
+    public int[][] getTypeArray(){
+        int[][] idArray = LoadSave.getLevelData(LEVEL_NAME);
+        int[][] typeArr = new int[idArray.length][idArray[0].length];
+
+        for(int y = 0; y < idArray.length; y++)
+            for(int x = 0; x < idArray[0].length; x++){
+                int id = idArray[y][x];
+                typeArr[y][x] = tiles.get(id).getTileType();
+            }
+
+        return typeArr;
     }
+    public boolean isSpriteAnimation(int spriteId){ return tiles.get(spriteId).isSpriteAnimation(); }
     public ArrayList<Tile> getRoadsStraight() { return roadsStraight; }
     public ArrayList<Tile> getRoadsCorner() { return roadsCorner; }
     public ArrayList<Tile> getWaterCorner() { return waterCorner; }

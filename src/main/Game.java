@@ -3,13 +3,12 @@ package main;
 import inputs.KeyboardListener;
 import inputs.MyMouseListener;
 import managers.TileManager;
-import objects.Tile;
 import scenes.*;
 import util.LoadSave;
 
 import javax.swing.*;
 
-import static util.StringUtil.DEFAULT_PATH;
+import static util.StringUtil.*;
 
 public class Game extends JFrame implements Runnable{
 
@@ -55,7 +54,7 @@ public class Game extends JFrame implements Runnable{
     private void createDefaultLevel() {
         int[] arr = new int[400];
         // Arrays.fill(arr, 0);
-        LoadSave.createLevel("new_level",arr);
+        LoadSave.createLevel(LEVEL_NAME,arr);
     }
 
     private void start(){
@@ -124,7 +123,7 @@ public class Game extends JFrame implements Runnable{
             }
 
             if(System.currentTimeMillis() - lastTimeCheck >= 1000){
-                System.out.println("FPS: " + frames + " | UPS: " + updates);
+                System.out.println(String.format(FPS_UP_INFOS, frames, updates));
                 frames = 0;
                 updates = 0;
                 lastTimeCheck = System.currentTimeMillis();

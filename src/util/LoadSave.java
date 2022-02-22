@@ -13,7 +13,7 @@ import static util.StringUtil.*;
 public class LoadSave {
     public static BufferedImage getSpriteAtlas(){
         BufferedImage img = null;
-        InputStream is = LoadSave.class.getClassLoader().getResourceAsStream("spriteatlas.png");
+        InputStream is = LoadSave.class.getClassLoader().getResourceAsStream(SPRITE_ATLAS);
 
         try {
             img = ImageIO.read(is);
@@ -22,17 +22,6 @@ public class LoadSave {
         }
 
         return img;
-    }
-
-    // txt file
-    public static void createFile(){
-        File txtFile = new File(String.format(DEFAULT_PATH, "testTextFile"));
-
-        try{
-            txtFile.createNewFile();
-        }catch (IOException e){
-            e.printStackTrace();
-        }
     }
 
     public static void createLevel(String name, int[] idArr){

@@ -9,6 +9,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import static util.StringUtil.*;
+
 public class GameScene {
 
     protected int[][] lvl;
@@ -27,8 +29,8 @@ public class GameScene {
     }
 
     private void loadDefaultLevel() {
-        lvl = LoadSave.getLevelData("new_level");
-        ArrayList<PathPoint> points = LoadSave.getLevelPathPoints("new_level");
+        lvl = LoadSave.getLevelData(LEVEL_NAME);
+        ArrayList<PathPoint> points = LoadSave.getLevelPathPoints(LEVEL_NAME);
         start = points.get(0);
         end = points.get(1);
     }

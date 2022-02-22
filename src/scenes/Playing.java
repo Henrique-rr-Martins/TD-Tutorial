@@ -39,7 +39,7 @@ public class Playing extends GameScene implements SceneMethods{
                 BAR_HEIGHT,
                 this);
 
-        this.enemyManager = new EnemyManager(this);
+        this.enemyManager = new EnemyManager(this, start, end);
         this.towerManager = new TowerManager(this);
         this.projectileManager = new ProjectileManager(this);
         this.waveManager = new WaveManager(this);
