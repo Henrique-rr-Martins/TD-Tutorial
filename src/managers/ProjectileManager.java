@@ -28,7 +28,6 @@ public class ProjectileManager {
 
     private Playing playing;
     private ArrayList<Projectile> projectiles = new ArrayList<>();
-    private ArrayList<Projectile> projectilesToDestroy = new ArrayList<>();
     private ArrayList<Explosion> explosions = new ArrayList<>();
     private ArrayList<Explosion> explosionsToDestroy = new ArrayList<>();
     private BufferedImage[] projImages, explosionImgs;
@@ -84,6 +83,13 @@ public class ProjectileManager {
                 rotate += 180;
         }
 
+        for(Projectile p : this.projectiles)
+            if(!p.isActive() && p.getProjectileType() == projectileType){
+                p.reuse(t.getX() + (float) SPRITE_SIZE / 2, t.getY() + (float) SPRITE_SIZE / 2,
+                        xSpeed, ySpeed, t.getDmg(), rotate);
+                return;
+            }
+
         projectiles.add(new Projectile(t.getX() + (float) SPRITE_SIZE / 2, t.getY() + (float) SPRITE_SIZE / 2,
                 xSpeed, ySpeed, t.getDmg(), rotate, projectileId++, projectileType));
     }
@@ -94,22 +100,14 @@ public class ProjectileManager {
                 p.move();
                 if (this.isProjectileHittingEnemy(p)) {
                     p.setActive(false);
-                    this.projectilesToDestroy.add(p);
                     if(p.getProjectileType() == BOMB){
                         this.explosions.add(new Explosion(p.getPos()));
                         this.explodeOnEnemies(p);
                     }
                 } else if(this.isProjectileOutsideBounds(p)){
-                    System.out.println("Disapear");
                     p.setActive(false);
                 }
-            } else
-                this.projectilesToDestroy.add(p);
-
-        for (Projectile p : this.projectilesToDestroy)
-            this.projectiles.remove(p);
-
-        this.projectilesToDestroy.clear();
+            }
 
         for(Explosion e: this.explosions){
             if(e.explosionIndex < this.explosionImgs.length)

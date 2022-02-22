@@ -38,6 +38,7 @@ public class WaveManager {
 
     public void increaseWaveIndex(){
         this.waveIndex++;
+        this.waveTick = 0;
         this.waveTickTimerOver = false;
         this.waveStartTimer = false;
     }

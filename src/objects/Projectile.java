@@ -20,14 +20,19 @@ public class Projectile {
         this.projectileType = projectileType;
     }
 
+    public void reuse(float x, float y, float xSpeed, float ySpeed, int dmg, float rotation) {
+        this.pos = new Point2D.Float(x, y);
+        this.xSpeed = xSpeed;
+        this.ySpeed = ySpeed;
+        this.dmg = dmg;
+        this.rotation = rotation;
+        this.active = true;
+    }
+
     public void move(){
         this.pos.x += xSpeed;
         this.pos.y += ySpeed;
     }
-
-
-
-
 
     public Point2D.Float getPos() { return pos; }
     public void setPos(Point2D.Float pos) { this.pos = pos; }

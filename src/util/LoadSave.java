@@ -8,6 +8,8 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import static util.StringUtil.*;
+
 public class LoadSave {
     public static BufferedImage getSpriteAtlas(){
         BufferedImage img = null;
@@ -24,7 +26,7 @@ public class LoadSave {
 
     // txt file
     public static void createFile(){
-        File txtFile = new File("resource/testTextFile.txt");
+        File txtFile = new File(String.format(DEFAULT_PATH, "testTextFile"));
 
         try{
             txtFile.createNewFile();
@@ -38,7 +40,7 @@ public class LoadSave {
         File newLevel = new File(filePath);
 
         if(newLevel.exists()){
-            System.out.println(filePath.concat(" already exists!"));
+            System.out.println(String.format(TXT_FILE_ALREADY_EXISTS, filePath));
             return;
         }
 
@@ -51,7 +53,6 @@ public class LoadSave {
     }
 
     private static void writeToFile(File file, int[] idArr, PathPoint start, PathPoint end) {
-        File txtFile = new File("resource/testTextFile.txt");
         try(PrintWriter pw = new PrintWriter(file)){
             for(Integer i : idArr)
                 pw.println(i);
@@ -70,7 +71,7 @@ public class LoadSave {
         File newLevel = new File(filePath);
 
         if(!newLevel.exists()){
-            System.out.println("File does not exists!");
+            System.out.println(TXT_FILE_DOES_NOT_EXIST);
             return;
         }
 
@@ -96,7 +97,7 @@ public class LoadSave {
         File lvlFile = new File(filePath);
 
         if(!lvlFile.exists()){
-            System.out.println("File does not exists!");
+            System.out.println(TXT_FILE_DOES_NOT_EXIST);
             return null;
         }
 
@@ -115,7 +116,7 @@ public class LoadSave {
         File lvlFile = new File(filePath);
 
         if(!lvlFile.exists()){
-            System.out.println("File does not exists!");
+            System.out.println(TXT_FILE_DOES_NOT_EXIST);
             return null;
         }
 

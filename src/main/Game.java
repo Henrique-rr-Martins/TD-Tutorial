@@ -9,6 +9,8 @@ import util.LoadSave;
 
 import javax.swing.*;
 
+import static util.StringUtil.DEFAULT_PATH;
+
 public class Game extends JFrame implements Runnable{
 
     private GameScreen gameScreen;
@@ -32,21 +34,22 @@ public class Game extends JFrame implements Runnable{
 
 
     public Game(){
-
         this.initClasses();
-//        this.createDefaultLevel();
 
         // Finish the operation
         super.setDefaultCloseOperation(EXIT_ON_CLOSE);
         // Default starting position of window - none
         super.setLocationRelativeTo(null);
         super.setResizable(false);
+        // title
+        super.setTitle("Tower Defense");
         // Add the Panel to the Frame
         super.add(gameScreen);
         // Pack() need to be call after all containers added to JFrame
         super.pack();
         // Shows the screen
         super.setVisible(true);
+        super.setLocationRelativeTo(null);
     }
 
     private void createDefaultLevel() {
